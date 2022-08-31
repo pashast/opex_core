@@ -1,0 +1,157 @@
+{% macro begin(name, entry, required) %}
+html += '<div class="row mb-3 {{ required ? 'required' : '' }}">';
+html += '    <label class="col-sm-2 col-form-label" for="input-{{ name|replace({'_': '-'}) }}-' + id + '">{{ entry }}</label>';
+html += '    <div class="col-sm-10">';
+{% endmacro %}
+
+{% macro end(name, languages, help) %}
+{% if help %}
+html += '<div class="form-text">{{ help }}</div>';
+{% endif %}
+{% if not languages %}
+html += '        <div id="error-{{ name|replace({'_': '-'}) }}-' + id + '" class="invalid-feedback"></div>';
+{% endif %}
+html += '    </div>';
+html += '</div>';
+{% endmacro %}
+
+{% macro mlend(name, language) %}
+{% if language %}
+html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" class="invalid-feedback"></div>';
+{% endif %}
+{% endmacro %}
+
+{% macro input(mod, name, value, entry, help, required, type) %}
+  {{ _self.begin(name, entry, required) }}
+  html += '<input type="{{ type|default('text') }}" name="{{ mod }}_js[' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" class="form-control{% if type == 'color' %} form-control-color{% endif %}"/>';
+  {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro textarea(mod, name, value, entry, help, required) %}
+  {{ _self.begin(name, entry, required) }}
+  html += '<textarea name="{{ mod }}_js[' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" class="form-control">{{ value }}</textarea>';
+  {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro editor(mod, name, value, entry, help, required) %}
+  {{ _self.begin(name, entry, required) }}
+  html += '<textarea name="{{ mod }}_js[' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="w-100 position-relative">{{ value }}</textarea>';
+  {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro input_ml(mod, name, languages, value, entry, help, required, type) %}
+    {{ _self.begin(name, entry, required) }}
+      {% for language in languages %}
+        html += '<div class="input-group">';
+        html += '  <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>';
+        html += '  <input type="{{ type|default('text') }}" name="{{ mod }}_js_ml[' + id + '][{{ name }}][{{ language.language_id }}]" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" class="form-control{% if type == 'color' %} form-control-color{% endif %}"/>';
+        html += '</div>';
+        {{ _self.mlend(name, language) }}
+      {% endfor %}
+    {{ _self.end(name, languages, help) }}
+{% endmacro %}
+
+{% macro textarea_ml(mod, name, languages, value, entry, help, required) %}
+    {{ _self.begin(name, entry, required) }}
+    {% for language in languages %}
+      html += '<div class="input-group">';
+      html += '  <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>';
+      html += '  <textarea name="{{ mod }}_js_ml[' + id + '][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" class="form-control"></textarea>';
+      html += '</div>';
+      {{ _self.mlend(name, language) }}
+    {% endfor %}
+    {{ _self.end(name, languages, help) }}
+{% endmacro %}
+
+{% macro fonticonpicker(mod, name, value, entry, help, required) %}
+  {{ _self.begin(name, entry, required) }}
+  html += '<div class="input-group">';
+  html += '    <input type="text" name="{{ mod }}_js[' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" class="form-control"/>';
+  html += '    <button class="btn btn-outline-secondary fontello-btn" type="button"><i class="fas fa-icons"></i></button>';
+  html += '</div>';
+  {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro select(mod, name, value, entry, help, required, options) %}
+    {{ _self.begin(name, entry, required) }}
+    html += '<select name="{{ mod }}_js[' + id + '][{{ name }}]" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" class="form-select">';
+        {% for key, item in options %}
+    html += '        <option value="{{ key }}"{% if key == value %} selected{% endif %}>{{ item }}</option>';
+        {% endfor %}
+    html += '</select>';
+    {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro buttonYN(mod, name, value, entry, help, required) %}
+    {{ _self.begin(name, entry, required) }}
+    html += '<div class="form-check form-switch form-switch-lg">';
+    html += '    <input type="hidden" name="{{ mod }}_js[' + id + '][{{ name }}]" value="0"/>';
+    html += '    <input type="checkbox" name="{{ mod }}_js[' + id + '][{{ name }}]" value="1" class="form-check-input"{% if value %} checked{% endif %}/>';
+    html += '</div>';
+    {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro datetimepicker(mod, name, value, entry, help, required, type) %}
+    {{ _self.begin(name, entry, required) }}
+    html += '<div class="input-group">';
+    html += '    <input type="text" name="{{ mod }}_js[' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" class="form-control {{ type }}" />';
+        {% if type == 'date' %}
+    html += '        <span class="input-group-text"><i class="fas fa-calendar"></i></span>';
+        {% elseif type == 'time' %}
+    html += '        <span class="input-group-text"><i class="far fa-clock"></i></span>';
+        {% elseif type == 'datetime' %}
+    html += '        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>';
+        {% endif %}
+    html += '</div>';
+    {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro image(mod, name, value, entry, help, required, placeholder) %}
+    {{ _self.begin(name, entry, required) }}
+    html += '<div class="card image">';
+    html += '    <img src="{{ placeholder }}" alt="" title="" id="thumb-{{ name }}-' + id + '" data-oc-placeholder="{{ placeholder }}" class="card-img-top"/> <input type="hidden" name="{{ mod }}_js[' + id + '][{{ name }}]" value="{{ value.image }}" id="input-{{ name }}-' + id + '"/>';
+    html += '    <div class="card-body">';
+    html += '        <button type="button" data-oc-toggle="image" data-oc-target="#input-{{ name }}-' + id + '" data-oc-thumb="#thumb-{{ name }}-' + id + '" class="btn btn-primary btn-sm btn-block"><i class="fas fa-pencil-alt"></i></button>';
+    html += '        <button type="button" data-oc-toggle="clear" data-oc-target="#input-{{ name }}-' + id + '" data-oc-thumb="#thumb-{{ name }}-' + id + '" class="btn btn-warning btn-sm btn-block"><i class="fas fa-trash-alt"></i></button>';
+    html += '    </div>';
+    html += '</div>';
+    {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro autocomplete(mod, name, value, entry, help, required, type) %}
+    {{ _self.begin(name, entry, required) }}
+    html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" list="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete"/>';
+    html += '<datalist id="list-{{ name }}-' + id + '"></datalist>';
+    html += '<div class="form-control p-0" style="min-height: 142px;">';
+    html += '    <table data-id="{{ mod }}_js[' + id + '][{{ name }}]" class="table table-sm m-0">';
+    html += '        <tbody class="item-well">';
+    html += '        </tbody>';
+    html += '    </table>';
+    html += '</div>';
+    {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{% macro autocompleteone(mod, name, value, entry, help, required, type) %}
+    {{ _self.begin(name, entry, required) }}
+    html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" list="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>';
+    html += '<datalist id="list-{{ name }}-' + id + '"></datalist>';
+    html += '<div class="form-control p-0" style="height: 37px;">';
+    html += '    <table data-id="{{ mod }}_js[' + id + '][{{ name }}]" class="table table-sm m-0">';
+    html += '        <tbody class="item-well">';
+    html += '        </tbody>';
+    html += '    </table>';
+    html += '</div>';
+    {{ _self.end(name, '', help) }}
+{% endmacro %}
+
+{#{% macro editor_ml(name, languages, value, entry, help, required) %}
+    {{ _self.begin(name, entry, required) }}
+    {% for language in languages %}
+      html += '<div class="input-group w-100 position-relative">';
+      html += '  <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>';
+      html += '  <textarea name="{{ mod }}_js[' + id + '][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}"></textarea>';
+      html += '</div>';
+      {{ _self.mlend(name, language) }}
+    {% endfor %}
+    {{ _self.end(name, languages, help) }}
+{% endmacro %}#}
