@@ -121,3 +121,9 @@
     </div>
     {{ _self.end(name, help) }}
 {% endmacro %}
+
+{% macro val_only(name, value, entry, help, required) %}
+    {{ _self.begin(name, entry, false) }}
+    <div class="form-control">{{ value }}</div>
+    {{ _self.end(name, help) }}
+{% endmacro %}
