@@ -86,7 +86,7 @@
   {{ _self.begin(key, name, entry, required) }}
   <div class="form-check form-switch form-switch-lg">
     <input type="hidden" name="{{ mod }}_js[{{ key }}][{{ name }}]" value="0"/>
-    <input type="checkbox" name="{{ mod }}_js[{{ key }}][{{ name }}]" value="1" class="form-check-input"{% if value %} checked{% endif %}/>
+    <input type="checkbox" name="{{ mod }}_js[{{ key }}][{{ name }}]" value="1" id="input-{{ name|replace({'_': '-'}) }}-{{ key }}" class="form-check-input"{% if value %} checked{% endif %}/>
   </div>
   {{ _self.end(key, name, '', help) }}
 {% endmacro %}

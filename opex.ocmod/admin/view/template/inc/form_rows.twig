@@ -52,7 +52,7 @@
   {{ _self.begin(name, entry, required) }}
   <div class="form-check form-switch form-switch-lg">
     <input type="hidden" name="{{ name }}" value="0"/>
-    <input type="checkbox" name="{{ name }}" value="1" class="form-check-input"{% if value %} checked{% endif %}/>
+    <input type="checkbox" name="{{ name }}" value="1" id="input-{{ name|replace({'_': '-'}) }}" class="form-check-input"{% if value %} checked{% endif %}/>
   </div>
   {{ _self.end(name, help) }}
 {% endmacro %}

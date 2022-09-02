@@ -86,7 +86,7 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
     {{ _self.begin(name, entry, required) }}
     html += '<div class="form-check form-switch form-switch-lg">';
     html += '    <input type="hidden" name="{{ mod }}_js[' + id + '][{{ name }}]" value="0"/>';
-    html += '    <input type="checkbox" name="{{ mod }}_js[' + id + '][{{ name }}]" value="1" class="form-check-input"{% if value %} checked{% endif %}/>';
+    html += '    <input type="checkbox" name="{{ mod }}_js[' + id + '][{{ name }}]" value="1" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" class="form-check-input"{% if value %} checked{% endif %}/>';
     html += '</div>';
     {{ _self.end(name, '', help) }}
 {% endmacro %}
