@@ -143,7 +143,9 @@ function fireAutocomplete() {
                             param_value = 'manufacturer_id';
                             break;
                         default:
-                            console.log('Undefined path, please add option manually!');
+                            param_label = 'param_label';
+                            param_value = 'param_value';
+                            break;
                     }
                     response($.map(json, function (item) {
                         return {
