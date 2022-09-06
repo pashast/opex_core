@@ -58,7 +58,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
     }
 
     public function specialFields(array $data): bool|array {
-        return $this->proceedFields($data['input'], $data['field']);
+        return $this->proceedFields($data['type'], $data['var']);
     }
 
     public function MlFields(array $data): array {
@@ -121,20 +121,16 @@ class Opexcore extends \Opencart\System\Engine\Controller {
         switch ($type) { //TODO: Add all opencart standard autocompletes.
             case 'image':
                 $this->load->model('tool/image');
-
                 $response = [
                     'image' => is_file(DIR_IMAGE . $var) ? $var : '',
                     'thumb' => $this->model_tool_image->resize((is_file(DIR_IMAGE . $var) ? $var : 'no_image.png'), 190, 190)
                 ];
-
                 break;
             case 'ac_products':
                 $this->load->model('catalog/product');
-
                 if (!empty($var)) {
                     foreach ($var as $product_id) {
                         $product_info = $this->model_catalog_product->getProduct($product_id);
-
                         if ($product_info) {
                             $response[] = [
                                 'param_label' => $product_info['name'],
@@ -146,11 +142,9 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 break;
             case 'ac_categories':
                 $this->load->model('catalog/category');
-
                 if (!empty($var)) {
                     foreach ($var as $category_id) {
                         $category_info = $this->model_catalog_category->getCategory($category_id);
-
                         if ($category_info) {
                             $response[] = [
                                 'param_label' => ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name'],
@@ -162,11 +156,9 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 break;
             case 'ac_manufacturers':
                 $this->load->model('catalog/manufacturer');
-
                 if (!empty($var)) {
                     foreach ($var as $manufacturer_id) {
                         $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
-
                         if ($manufacturer_info) {
                             $response[] = [
                                 'param_label' => $manufacturer_info['name'],
@@ -178,11 +170,9 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 break;
             case 'ac_informations':
                 $this->load->model('catalog/information');
-
                 if (!empty($var)) {
                     foreach ($var as $information_id) {
                         $information_info = $this->model_catalog_information->getDescriptions($information_id);
-
                         if ($information_info) {
                             $response[] = [
                                 'param_label' => $information_info[(int)$this->config->get('config_language_id')]['title'],
@@ -194,9 +184,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 break;
             case 'ac_product':
                 $this->load->model('catalog/product');
-
                 $product_info = $this->model_catalog_product->getProduct((int)$var);
-
                 if ($product_info) {
                     $response = [
                         'param_label' => $product_info['name'],
@@ -206,9 +194,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 break;
             case 'ac_category':
                 $this->load->model('catalog/category');
-
                 $category_info = $this->model_catalog_category->getCategory((int)$var);
-
                 if ($category_info) {
                     $response = [
                         'param_label' => ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name'],
@@ -218,9 +204,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 break;
             case 'ac_manufacturer':
                 $this->load->model('catalog/manufacturer');
-
                 $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int)$var);
-
                 if ($manufacturer_info) {
                     $response = [
                         'param_label' => $manufacturer_info['name'],
@@ -230,9 +214,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 break;
             case 'ac_information':
                 $this->load->model('catalog/information');
-
                 $information_info = $this->model_catalog_information->getDescriptions((int)$var);
-
                 if ($information_info) {
                     $response = [
                         'param_label' => $information_info[(int)$this->config->get('config_language_id')]['title'],
