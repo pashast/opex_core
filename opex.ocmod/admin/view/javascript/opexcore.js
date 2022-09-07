@@ -1,6 +1,5 @@
 function addMlJsItemHTML(lang, id) {
     $('.tab-pane#language' + lang + '-multi .adder').append(html);
-    combineItems();
     sortPanels();
     if (typeof opex_mljs_tabs !== 'undefined' && opex_mljs_tabs) {
         $('#mljs-cards #language' + lang + '-multi .nav-pills[role="tablist"]').append('<div class="d-flex align-items-center justify-content-between nav-link" id="mljs-card-' + lang + '-' + id + '-tab" data-bs-toggle="pill" data-bs-target="#mljs-card-' + lang + '-' + id + '" role="tab"><span><i class="fas fa-arrows-alt-v"></i> <span class="tab-name">' + id + '</span></span></div>');
@@ -14,7 +13,6 @@ function addMlJsItemHTML(lang, id) {
 
 function addJsItemHTML(id) {
     $('#js-cards .adder').append(html);
-    combineItems();
     sortPanels();
     if (typeof opex_js_tabs !== 'undefined' && opex_js_tabs) {
         $('#js-cards .nav-pills[role="tablist"]').append('<div class="d-flex align-items-center justify-content-between nav-link" id="js-card-' + id + '-tab" data-bs-toggle="pill" data-bs-target="#js-card-' + id + '" role="tab"><span><i class="fas fa-arrows-alt-v"></i> <span class="tab-name">' + id + '</span></span></div>');
@@ -43,26 +41,6 @@ function cardRemove(block, id) {
         }
         tab.remove();
     }
-}
-
-function combineItems() {
-    $('.opex-combine label').each(function () {
-        let parent = $(this).closest('.opex-combine');
-        $(this).unwrap().ready(function () {
-            let dataClasses = parent.data('classes');
-            if (dataClasses) {
-                let classes = dataClasses.toString().split('|');
-                for (var i = 0; i < classes.length; i++) {
-                    parent.children().eq(i).removeClass('col-sm-2 col-sm-10').addClass(classes[i]);
-                }
-            } else {
-                parent.children('label:not(:first)').hide();
-                parent.children('label + div').removeClass('col-sm-10').addClass('col-sm');
-                parent.children('label:not(:last) + div').addClass('mb-3 mb-md-0');
-            }
-            parent.removeClass('opex-combine');
-        });
-    });
 }
 
 function sortPanels() {
@@ -256,7 +234,6 @@ $(document)
         $('.fontello-btn.active').removeClass('active');
     })
     .ready(function () {
-        combineItems();
         sortPanels();
         if (typeof opex_js_tabs !== 'undefined' && opex_js_tabs) {
             navTabs('#js-cards');

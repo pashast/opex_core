@@ -1,64 +1,85 @@
-{% macro begin(lang, name, entry, required) %}
+{% macro begin(lang, name, entry, required, classes) %}
+{% if classes %}
+{% if classes.0 != 'del' %}
+<div class="{{ classes.0 }}">
+{% endif %}
+{% if classes.1 != 'del' %}
+    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-'}) }}-{{ lang }}">{{ entry }}</label>
+{% endif %}
+{% if classes.2 != 'del' %}
+    <div class="{{ classes.2 }}">
+{% endif %}
+{% else %}
 <div class="row mb-3 {{ required ? 'required' : '' }}">
     <label class="col-sm-2 col-form-label" for="input-{{ name|replace({'_': '-'}) }}-{{ lang }}">{{ entry }}</label>
     <div class="col-sm-10">
-        {% endmacro %}
+{% endif %}
+{% endmacro %}
 
-        {% macro end(lang, name, help) %}
+{% macro end(lang, name, help, classes) %}
         {% if help %} <div class="form-text">{{ help }}</div> {% endif %}
         <div id="error-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="invalid-feedback"></div>
+{% if classes %}
+{% if classes.2 != 'del' %}
+    </div>
+{% endif %}
+{% if classes.0 != 'del' %}
+</div>
+{% endif %}
+{% else %}
     </div>
 </div>
+{% endif %}
 {% endmacro %}
 
-{% macro input(lang, mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro input(lang, mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <input type="{{ type|default('text') }}" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-control{% if type == 'color' %} form-control-color{% endif %}"/>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro fonticonpicker(lang, mod, name, value, entry, help, required) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro fonticonpicker(lang, mod, name, value, entry, help, required, classes) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <div class="input-group">
         <input type="text" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-control"/>
         <button class="btn btn-outline-secondary fontello-btn" type="button"><i class="fas fa-icons"></i></button>
     </div>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro textarea(lang, mod, name, value, entry, help, required) %}
-    {{ _self.begin(lang, name, entry, required) }}
-    <textarea name="{{ mod }}_ml[{{ lang }}][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-control">{{ value }}</textarea>
-    {{ _self.end(lang, name, help) }}
+{% macro textarea(lang, mod, name, value, entry, help, required, classes, rows_count) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
+    <textarea name="{{ mod }}_ml[{{ lang }}][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value }}</textarea>
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro editor(lang, mod, name, value, entry, help, required) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro editor(lang, mod, name, value, entry, help, required, classes) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <textarea name="{{ mod }}_ml[{{ lang }}][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="w-100 position-relative">{{ value }}</textarea>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro select(lang, mod, name, value, entry, help, required, options) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro select(lang, mod, name, value, entry, help, required, classes, options) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <select name="{{ mod }}_ml[{{ lang }}][{{ name }}]" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-select">
         {% for key, item in options %}
             <option value="{{ key }}"{% if key == value %} selected{% endif %}>{{ item }}</option>
         {% endfor %}
     </select>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro buttonYN(lang, mod, name, value, entry, help, required) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro buttonYN(lang, mod, name, value, entry, help, required, classes) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <div class="form-check form-switch form-switch-lg">
       <input type="hidden" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="0"/>
       <input type="checkbox" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="1" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-check-input"{% if value %} checked{% endif %}/>
     </div>
-  {{ _self.end(lang, name, help) }}
+  {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro datetimepicker(lang, mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro datetimepicker(lang, mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <div class="input-group">
         <input type="text" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-control {{ type }}" />
         {% if type == 'date' %}
@@ -69,11 +90,11 @@
             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
         {% endif %}
     </div>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro image(lang, mod, name, value, entry, help, required, placeholder) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro image(lang, mod, name, value, entry, help, required, classes, placeholder) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <div class="card image">
         <img src="{% if value.thumb %}{{ value.thumb }}{% else %}{{ placeholder }}{% endif %}" alt="" title="" id="thumb-{{ name }}-{{ lang }}" data-oc-placeholder="{{ placeholder }}" class="card-img-top"/> <input type="hidden" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value.image }}" id="input-{{ name }}-{{ lang }}"/>
         <div class="card-body">
@@ -81,11 +102,11 @@
             <button type="button" data-oc-toggle="clear" data-oc-target="#input-{{ name }}-{{ lang }}" data-oc-thumb="#thumb-{{ name }}-{{ lang }}" class="btn btn-warning btn-sm btn-block"><i class="fas fa-trash-alt"></i></button>
         </div>
     </div>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro autocomplete(lang, mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro autocomplete(lang, mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <input type="text" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" list="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete"/>
     <datalist id="list-{{ name }}-{{ lang }}"></datalist>
     <div class="form-control p-0" style="min-height: 142px;">
@@ -100,11 +121,11 @@
             </tbody>
         </table>
     </div>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro autocompleteone(lang, mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(lang, name, entry, required) }}
+{% macro autocompleteone(lang, mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <input type="text" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" list="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>
     <datalist id="list-{{ name }}-{{ lang }}"></datalist>
     <div class="form-control p-0" style="height: 37px;">
@@ -119,11 +140,11 @@
             </tbody>
         </table>
     </div>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
-{% macro val_only(lang, mod, name, value, entry, help, required) %}
-    {{ _self.begin(lang, name, entry, false) }}
+{% macro val_only(lang, mod, name, value, entry, help, required, classes) %}
+    {{ _self.begin(lang, name, entry, required, classes) }}
     <div class="form-control">{{ value }}</div>
-    {{ _self.end(lang, name, help) }}
+    {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}

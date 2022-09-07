@@ -1,66 +1,87 @@
-{% macro begin(name, entry, required) %}
+{% macro begin(name, entry, required, classes) %}
+{% if classes %}
+{% if classes.0 != 'del' %}
+html += '<div class="{{ classes.0 }}">';
+{% endif %}
+{% if classes.1 != 'del' %}
+html += '    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '">{{ entry }}</label>';
+{% endif %}
+{% if classes.2 != 'del' %}
+html += '    <div class="{{ classes.2 }}">';
+{% endif %}
+{% else %}
 html += '<div class="row mb-3 {{ required ? 'required' : '' }}">';
 html += '    <label class="col-sm-2 col-form-label" for="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '">{{ entry }}</label>';
 html += '    <div class="col-sm-10">';
+{% endif %}
 {% endmacro %}
 
-{% macro end(name, help) %}
+{% macro end(name, help, classes) %}
 {% if help %}
 html += '<div class="form-text">{{ help }}</div>';
 {% endif %}
 html += '        <div id="error-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="invalid-feedback"></div>';
+{% if classes %}
+{% if classes.2 != 'del' %}
+html += '    </div>';
+{% endif %}
+{% if classes.0 != 'del' %}
+html += '</div>';
+{% endif %}
+{% else %}
 html += '    </div>';
 html += '</div>';
+{% endif %}
 {% endmacro %}
 
-{% macro input(mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro input(mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<input type="{{ type|default('text') }}" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control{% if type == 'color' %} form-control-color{% endif %}"/>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro fonticonpicker(mod, name, value, entry, help, required) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro fonticonpicker(mod, name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<div class="input-group">';
     html += '    <input type="text" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control"/>';
     html += '    <button class="btn btn-outline-secondary fontello-btn" type="button"><i class="fas fa-icons"></i></button>';
     html += '</div>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro textarea(mod, name, value, entry, help, required) %}
-    {{ _self.begin(name, entry, required) }}
-    html += '<textarea name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control">{{ value }}</textarea>';
-    {{ _self.end(name, help) }}
+{% macro textarea(mod, name, value, entry, help, required, classes, rows_count) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    html += '<textarea name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value }}</textarea>';
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro editor(mod, name, value, entry, help, required) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro editor(mod, name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<textarea name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="w-100 position-relative">{{ value }}</textarea>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro select(mod, name, value, entry, help, required, options) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro select(mod, name, value, entry, help, required, classes, options) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<select name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-select">';
         {% for key, item in options %}
     html += '        <option value="{{ key }}"{% if key == value %} selected{% endif %}>{{ item }}</option>';
         {% endfor %}
     html += '</select>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro buttonYN(mod, name, value, entry, help, required) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro buttonYN(mod, name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<div class="form-check form-switch form-switch-lg">';
     html += '    <input type="hidden" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="0"/>';
     html += '    <input type="checkbox" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="1" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-check-input"{% if value %} checked{% endif %}/>';
     html += '</div>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro datetimepicker(mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro datetimepicker(mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<div class="input-group">';
     html += '    <input type="text" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control {{ type }}" />';
         {% if type == 'date' %}
@@ -71,11 +92,11 @@ html += '</div>';
     html += '        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>';
         {% endif %}
     html += '</div>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro image(mod, name, value, entry, help, required, placeholder) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro image(mod, name, value, entry, help, required, classes, placeholder) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<div class="card image">';
     html += '    <img src="{{ placeholder }}" alt="" title="" id="thumb-{{ name }}-' + lang + '-' + id + '" data-oc-placeholder="{{ placeholder }}" class="card-img-top"/> <input type="hidden" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value.image }}" id="input-{{ name }}-' + lang + '-' + id + '"/>';
     html += '    <div class="card-body">';
@@ -83,11 +104,11 @@ html += '</div>';
     html += '        <button type="button" data-oc-toggle="clear" data-oc-target="#input-{{ name }}-' + lang + '-' + id + '" data-oc-thumb="#thumb-{{ name }}-' + lang + '-' + id + '" class="btn btn-warning btn-sm btn-block"><i class="fas fa-trash-alt"></i></button>';
     html += '    </div>';
     html += '</div>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro autocomplete(mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro autocomplete(mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" list="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete"/>';
     html += '<datalist id="list-{{ name }}-' + lang + '-' + id + '"></datalist>';
     html += '<div class="form-control p-0" style="min-height: 142px;">';
@@ -96,11 +117,11 @@ html += '</div>';
     html += '        </tbody>';
     html += '    </table>';
     html += '</div>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
-{% macro autocompleteone(mod, name, value, entry, help, required, type) %}
-    {{ _self.begin(name, entry, required) }}
+{% macro autocompleteone(mod, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
     html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" list="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>';
     html += '<datalist id="list-{{ name }}-' + lang + '-' + id + '"></datalist>';
     html += '<div class="form-control p-0" style="height: 37px;">';
@@ -109,5 +130,5 @@ html += '</div>';
     html += '        </tbody>';
     html += '    </table>';
     html += '</div>';
-    {{ _self.end(name, help) }}
+    {{ _self.end(name, help, classes) }}
 {% endmacro %}
