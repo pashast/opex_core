@@ -120,6 +120,14 @@ function fireAutocomplete() {
                             param_label = 'name';
                             param_value = 'manufacturer_id';
                             break;
+                        case 'catalog/option|autocomplete':
+                            param_label = 'name';
+                            param_value = 'option_id';
+                            break;
+                        case 'catalog/attribute|autocomplete':
+                            param_label = 'name';
+                            param_value = 'attribute_id';
+                            break;
                         default:
                             param_label = 'param_label';
                             param_value = 'param_value';

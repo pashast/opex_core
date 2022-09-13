@@ -182,6 +182,34 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                     }
                 }
                 break;
+            case 'ac_options':
+                $this->load->model('catalog/option');
+                if (!empty($var)) {
+                    foreach ($var as $option_id) {
+                        $option_info = $this->model_catalog_option->getOption($option_id);
+                        if ($option_info) {
+                            $response[] = [
+                                'param_label' => $option_info['name'],
+                                'param_value' => $option_id
+                            ];
+                        }
+                    }
+                }
+                break;
+            case 'ac_attributes':
+                $this->load->model('catalog/attribute');
+                if (!empty($var)) {
+                    foreach ($var as $attribute_id) {
+                        $attribute_info = $this->model_catalog_attribute->getAttribute($attribute_id);
+                        if ($attribute_info) {
+                            $response[] = [
+                                'param_label' => $attribute_info['name'],
+                                'param_value' => $attribute_id
+                            ];
+                        }
+                    }
+                }
+                break;
             case 'ac_product':
                 $this->load->model('catalog/product');
                 $product_info = $this->model_catalog_product->getProduct((int)$var);
@@ -219,6 +247,26 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                     $response = [
                         'param_label' => $information_info[(int)$this->config->get('config_language_id')]['title'],
                         'param_value' => (int)$var
+                    ];
+                }
+                break;
+            case 'ac_option':
+                $this->load->model('catalog/option');
+                $option_info = $this->model_catalog_option->getOption((int)$var);
+                if ($option_info) {
+                    $response = [
+                        'param_label' => $option_info['name'],
+                        'param_value' => $option_info['option_id']
+                    ];
+                }
+                break;
+            case 'ac_attribute':
+                $this->load->model('catalog/attribute');
+                $attribute_info = $this->model_catalog_attribute->getAttribute((int)$var);
+                if ($attribute_info) {
+                    $response = [
+                        'param_label' => $attribute_info['name'],
+                        'param_value' => $attribute_info['attribute_id']
                     ];
                 }
                 break;

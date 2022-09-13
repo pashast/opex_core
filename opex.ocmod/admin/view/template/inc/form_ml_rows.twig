@@ -1,7 +1,7 @@
 {% macro begin(lang, name, entry, required, classes) %}
 {% if classes %}
 {% if classes.0 != 'del' %}
-<div class="{{ classes.0 }}">
+<div class="{{ classes.0 }} {{ required ? 'required' : '' }}">
 {% endif %}
 {% if classes.1 != 'del' %}
     <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-'}) }}-{{ lang }}">{{ entry }}</label>

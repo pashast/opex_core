@@ -1,7 +1,7 @@
 {% macro begin(name, entry, required, classes) %}
 {% if classes %}
 {% if classes.0 != 'del' %}
-html += '<div class="{{ classes.0 }}">';
+html += '<div class="{{ classes.0 }} {{ required ? 'required' : '' }}">';
 {% endif %}
 {% if classes.1 != 'del' %}
 html += '    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '">{{ entry }}</label>';

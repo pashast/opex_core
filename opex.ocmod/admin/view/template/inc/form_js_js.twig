@@ -1,7 +1,7 @@
 {% macro begin(name, entry, required, classes) %}
 {% if classes %}
 {% if classes.0 != 'del' %}
-html += '<div class="{{ classes.0 }}">';
+html += '<div class="{{ classes.0 }} {{ required ? 'required' : '' }}">';
 {% endif %}
 {% if classes.1 != 'del' %}
 html += '    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-'}) }}-' + id + '">{{ entry }}</label>';
@@ -60,7 +60,7 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
   {{ _self.end(name, '', help, classes) }}
 {% endmacro %}
 
-{% macro input_ml(mod, name, languages, value, entry, help, required, type) %}
+{% macro input_ml(mod, languages, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
       {% for language in languages %}
         html += '<div class="input-group">';
@@ -72,7 +72,7 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
     {{ _self.end(name, languages, help, classes) }}
 {% endmacro %}
 
-{% macro textarea_ml(mod, name, languages, value, entry, help, required) %}
+{% macro textarea_ml(mod, languages, name, value, entry, help, required, classes) %}
     {{ _self.begin(name, entry, required, classes) }}
     {% for language in languages %}
       html += '<div class="input-group">';
