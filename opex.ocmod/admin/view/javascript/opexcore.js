@@ -101,7 +101,7 @@ function fireAutocomplete() {
     $('input.item-autocomplete').autocomplete({
         'source': function (request, response) {
             $.ajax({
-                url: 'index.php?route=' + $(this).data('path') + '&user_token=' + user_token + '&filter_name=' + encodeURIComponent(request),
+                url: 'index.php?route=' + $(this).data('path') + '&user_token=' + user_token + '&limit=' + limit_autocomplete + '&filter_name=' + encodeURIComponent(request),
                 dataType: 'json',
                 success: function (json) {
                     var param_label, param_value;
@@ -109,28 +109,28 @@ function fireAutocomplete() {
 
                     switch (path) {
                         case 'catalog/product|autocomplete':
-                            param_label = 'name';
                             param_value = 'product_id';
+                            param_label = 'name';
                             break;
                         case 'catalog/category|autocomplete':
-                            param_label = 'name';
                             param_value = 'category_id';
+                            param_label = 'name';
                             break;
                         case 'catalog/manufacturer|autocomplete':
-                            param_label = 'name';
                             param_value = 'manufacturer_id';
+                            param_label = 'name';
                             break;
                         case 'catalog/option|autocomplete':
-                            param_label = 'name';
                             param_value = 'option_id';
+                            param_label = 'name';
                             break;
                         case 'catalog/attribute|autocomplete':
-                            param_label = 'name';
                             param_value = 'attribute_id';
+                            param_label = 'name';
                             break;
                         default:
-                            param_label = 'param_label';
                             param_value = 'param_value';
+                            param_label = 'param_label';
                             break;
                     }
                     response($.map(json, function (item) {

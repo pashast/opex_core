@@ -115,163 +115,137 @@ class Opexcore extends \Opencart\System\Engine\Controller {
         return $ml_output;
     }
 
-    public function proceedFields(string $type, string|array $var): array {
+    public function proceedFields(string $func_name, string|array $var): array {
+        $output = [];
+        if ($var) {
+            $separator = '|';
+            if (is_string($var)) {
+                $string_flag = true;
+                $var = [$var];
+            }
+            if (str_starts_with($func_name, $separator)) {
+                $method_name = ltrim($func_name, $separator);
+                $response = $this->$method_name($var);
+            } else {
+                $response = $this->load->controller($func_name, $var);
+            }
+            if (isset($string_flag) && !empty($response)) {
+                $output = $response[0];
+            } else {
+                $output = $response;
+            }
+        }
+        return $output;
+    }
+
+    public function reverseImages($var): array {
+        $this->load->model('tool/image');
         $response = [];
 
-        switch ($type) { //TODO: Add all opencart standard autocompletes.
-            case 'image':
-                $this->load->model('tool/image');
-                $response = [
-                    'image' => is_file(DIR_IMAGE . $var) ? $var : '',
-                    'thumb' => $this->model_tool_image->resize((is_file(DIR_IMAGE . $var) ? $var : 'no_image.png'), 190, 190)
+        foreach ($var as $image) {
+            $response[] = [
+                'image' => is_file(DIR_IMAGE . $image) ? $image : '',
+                'thumb' => $this->model_tool_image->resize((is_file(DIR_IMAGE . $image) ? $image : 'no_image.png'), 190, 190)
                 ];
-                break;
-            case 'ac_products':
+        }
+        return $response;
+    }
+
+    public function reverseAutocompleteProducts($var): array {
                 $this->load->model('catalog/product');
-                if (!empty($var)) {
+        $response = [];
+
                     foreach ($var as $product_id) {
                         $product_info = $this->model_catalog_product->getProduct($product_id);
                         if ($product_info) {
                             $response[] = [
-                                'param_label' => $product_info['name'],
-                                'param_value' => $product_info['product_id']
+                    'param_value' => $product_info['product_id'],
+                    'param_label' => $product_info['name']
                             ];
                         }
                     }
+        return $response;
                 }
-                break;
-            case 'ac_categories':
+
+    public function reverseAutocompleteCategories($var): array {
                 $this->load->model('catalog/category');
-                if (!empty($var)) {
+        $response = [];
+
                     foreach ($var as $category_id) {
                         $category_info = $this->model_catalog_category->getCategory($category_id);
                         if ($category_info) {
                             $response[] = [
-                                'param_label' => ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name'],
-                                'param_value' => $category_info['category_id']
+                    'param_value' => $category_info['category_id'],
+                    'param_label' => ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name']
                             ];
                         }
                     }
+        return $response;
                 }
-                break;
-            case 'ac_manufacturers':
+
+    public function reverseAutocompleteManufacturers($var): array {
                 $this->load->model('catalog/manufacturer');
-                if (!empty($var)) {
+        $response = [];
+
                     foreach ($var as $manufacturer_id) {
                         $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
                         if ($manufacturer_info) {
                             $response[] = [
-                                'param_label' => $manufacturer_info['name'],
-                                'param_value' => $manufacturer_info['manufacturer_id']
+                    'param_value' => $manufacturer_info['manufacturer_id'],
+                    'param_label' => $manufacturer_info['name']
                             ];
                         }
                     }
+        return $response;
                 }
-                break;
-            case 'ac_informations':
+
+    public function reverseAutocompleteInformations($var): array {
                 $this->load->model('catalog/information');
-                if (!empty($var)) {
+        $response = [];
+
                     foreach ($var as $information_id) {
                         $information_info = $this->model_catalog_information->getDescriptions($information_id);
                         if ($information_info) {
                             $response[] = [
-                                'param_label' => $information_info[(int)$this->config->get('config_language_id')]['title'],
-                                'param_value' => $information_id
+                    'param_value' => $information_id,
+                    'param_label' => $information_info[(int)$this->config->get('config_language_id')]['title']
                             ];
                         }
                     }
+        return $response;
                 }
-                break;
-            case 'ac_options':
+
+    public function reverseAutocompleteOptions($var): array {
+        var_dump($var);
                 $this->load->model('catalog/option');
-                if (!empty($var)) {
+        $response = [];
+
                     foreach ($var as $option_id) {
                         $option_info = $this->model_catalog_option->getOption($option_id);
                         if ($option_info) {
                             $response[] = [
-                                'param_label' => $option_info['name'],
-                                'param_value' => $option_id
+                    'param_value' => $option_id,
+                    'param_label' => $option_info['name']
                             ];
                         }
                     }
+        print_r($response);
+        return $response;
                 }
-                break;
-            case 'ac_attributes':
+
+    public function reverseAutocompleteAttributes($var): array {
                 $this->load->model('catalog/attribute');
-                if (!empty($var)) {
+        $response = [];
+
                     foreach ($var as $attribute_id) {
                         $attribute_info = $this->model_catalog_attribute->getAttribute($attribute_id);
                         if ($attribute_info) {
                             $response[] = [
-                                'param_label' => $attribute_info['name'],
-                                'param_value' => $attribute_id
-                            ];
-                        }
-                    }
-                }
-                break;
-            case 'ac_product':
-                $this->load->model('catalog/product');
-                $product_info = $this->model_catalog_product->getProduct((int)$var);
-                if ($product_info) {
-                    $response = [
-                        'param_label' => $product_info['name'],
-                        'param_value' => $product_info['product_id']
+                    'param_value' => $attribute_id,
+                    'param_label' => $attribute_info['name']
                     ];
                 }
-                break;
-            case 'ac_category':
-                $this->load->model('catalog/category');
-                $category_info = $this->model_catalog_category->getCategory((int)$var);
-                if ($category_info) {
-                    $response = [
-                        'param_label' => ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name'],
-                        'param_value' => $category_info['category_id']
-                    ];
                 }
-                break;
-            case 'ac_manufacturer':
-                $this->load->model('catalog/manufacturer');
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int)$var);
-                if ($manufacturer_info) {
-                    $response = [
-                        'param_label' => $manufacturer_info['name'],
-                        'param_value' => $manufacturer_info['manufacturer_id']
-                    ];
-                }
-                break;
-            case 'ac_information':
-                $this->load->model('catalog/information');
-                $information_info = $this->model_catalog_information->getDescriptions((int)$var);
-                if ($information_info) {
-                    $response = [
-                        'param_label' => $information_info[(int)$this->config->get('config_language_id')]['title'],
-                        'param_value' => (int)$var
-                    ];
-                }
-                break;
-            case 'ac_option':
-                $this->load->model('catalog/option');
-                $option_info = $this->model_catalog_option->getOption((int)$var);
-                if ($option_info) {
-                    $response = [
-                        'param_label' => $option_info['name'],
-                        'param_value' => $option_info['option_id']
-                    ];
-                }
-                break;
-            case 'ac_attribute':
-                $this->load->model('catalog/attribute');
-                $attribute_info = $this->model_catalog_attribute->getAttribute((int)$var);
-                if ($attribute_info) {
-                    $response = [
-                        'param_label' => $attribute_info['name'],
-                        'param_value' => $attribute_info['attribute_id']
-                    ];
-                }
-                break;
-        }
-
         return $response;
     }
 
@@ -281,29 +255,27 @@ class Opexcore extends \Opencart\System\Engine\Controller {
         if (isset($this->request->get['filter_name'])) {
             $this->load->model('extension/opex/other/opexcore');
 
+            if (isset($this->request->get['limit'])) {
+                $limit = (int)$this->request->get['limit'];
+            } else {
+                $limit = 5;
+            }
+
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start'       => 0,
-                'limit'       => 5
+                'limit'       => $limit
             ];
 
             $results = $this->model_extension_opex_other_opexcore->getAutocompleteInformations($filter_data);
 
             foreach ($results as $result) {
                 $json[] = [
+                    'param_value' => $result['information_id'],
                     'param_label' => strip_tags(html_entity_decode($result['title'], ENT_QUOTES, 'UTF-8')),
-                    'param_value' => $result['information_id']
                 ];
             }
         }
-
-        $sort_order = [];
-
-        foreach ($json as $key => $value) {
-            $sort_order[$key] = $value['param_value'];
-        }
-
-        array_multisort($sort_order, SORT_ASC, $json);
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
