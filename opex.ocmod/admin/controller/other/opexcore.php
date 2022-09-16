@@ -29,6 +29,12 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 
         $data['other_opexcore_status'] = $this->config->get('other_opexcore_status');
 
+        if ($this->config->get('other_opexcore_ac_limit')) {
+            $data['other_opexcore_ac_limit'] = $this->config->get('other_opexcore_ac_limit');
+        } else {
+            $data['other_opexcore_ac_limit'] = 5;
+        }
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');

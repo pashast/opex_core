@@ -101,7 +101,7 @@ function fireAutocomplete() {
     $('input.item-autocomplete').autocomplete({
         'source': function (request, response) {
             $.ajax({
-                url: 'index.php?route=' + $(this).data('path') + '&user_token=' + user_token + '&limit=' + limit_autocomplete + '&filter_name=' + encodeURIComponent(request),
+                url: 'index.php?route=' + $(this).data('path') + '&user_token=' + user_token + '&limit=' + autocomplete_limit + '&filter_name=' + encodeURIComponent(request),
                 dataType: 'json',
                 success: function (json) {
                     var param_label, param_value;
