@@ -56,7 +56,7 @@
 
 {% macro editor(key, mod, name, value, entry, help, required, classes) %}
   {{ _self.begin(key, name, entry, required, classes) }}
-  <textarea name="{{ mod }}_js[{{ key }}][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ key }}" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="w-100 position-relative">{{ value }}</textarea>
+  <textarea name="{{ mod }}_js[{{ key }}][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ key }}" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>
   {{ _self.end(key, name, '', help, classes) }}
 {% endmacro %}
 
@@ -78,6 +78,18 @@
     <div class="input-group">
       <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
       <textarea name="{{ mod }}_js_ml[{{ key }}][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-{{ key }}" class="form-control">{{ value[language.language_id] }}</textarea>
+    </div>
+    {{ _self.mlend(key, name, language) }}
+  {% endfor %}
+  {{ _self.end(key, languages, name, help, classes) }}
+{% endmacro %}
+
+{% macro editor_ml(key, mod, languages, name, value, entry, help, required, classes) %}
+  {{ _self.begin(key, name, entry, required, classes) }}
+  {% for language in languages %}
+    <div>
+      <div class="input-group-text rounded-0 border-bottom-0"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
+      <textarea name="{{ mod }}_js_ml[{{ key }}][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-{{ key }}" data-oc-toggle="ckeditor" class="position-relative form-control">{{ value[language.language_id] }}</textarea>
     </div>
     {{ _self.mlend(key, name, language) }}
   {% endfor %}

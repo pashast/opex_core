@@ -56,7 +56,7 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
 
 {% macro editor(mod, name, value, entry, help, required, classes) %}
   {{ _self.begin(name, entry, required, classes) }}
-  html += '<textarea name="{{ mod }}_js[' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="w-100 position-relative">{{ value }}</textarea>';
+  html += '<textarea name="{{ mod }}_js[' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>';
   {{ _self.end(name, '', help, classes) }}
 {% endmacro %}
 
@@ -78,6 +78,18 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
       html += '<div class="input-group">';
       html += '  <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>';
       html += '  <textarea name="{{ mod }}_js_ml[' + id + '][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" class="form-control"></textarea>';
+      html += '</div>';
+      {{ _self.mlend(name, language) }}
+    {% endfor %}
+    {{ _self.end(name, languages, help, classes) }}
+{% endmacro %}
+
+{% macro editor_ml(mod, languages, name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    {% for language in languages %}
+      html += '<div>';
+      html += '  <div class="input-group-text rounded-0 border-bottom-0"><img src="{{ language.image }}" title="{{ language.name }}"/></div>';
+      html += '  <textarea name="{{ mod }}_js_ml[' + id + '][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" data-oc-toggle="ckeditor" class="position-relative form-control"></textarea>';
       html += '</div>';
       {{ _self.mlend(name, language) }}
     {% endfor %}

@@ -55,7 +55,7 @@
 
 {% macro editor(key, lang, mod, name, value, entry, help, required, classes) %}
   {{ _self.begin(key, lang, name, entry, required, classes) }}
-  <textarea name="{{ mod }}_mljs[{{ lang }}][{{ key }}][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}-{{ key }}" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="w-100 position-relative">{{ value }}</textarea>
+  <textarea name="{{ mod }}_mljs[{{ lang }}][{{ key }}][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}-{{ key }}" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>
   {{ _self.end(key, lang, name, help, classes) }}
 {% endmacro %}
 

@@ -57,7 +57,7 @@ html += '</div>';
 
 {% macro editor(mod, name, value, entry, help, required, classes) %}
     {{ _self.begin(name, entry, required, classes) }}
-    html += '<textarea name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-toggle="ckeditor" data-lang="{{ ckeditor }}" class="w-100 position-relative">{{ value }}</textarea>';
+    html += '<textarea name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
