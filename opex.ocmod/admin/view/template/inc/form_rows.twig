@@ -32,6 +32,12 @@
 {% endif %}
 {% endmacro %}
 
+{% macro mlend(name, language) %}
+    {% if language %}
+        <div id="error-{{ name }}-{{ language.language_id }}" class="invalid-feedback"></div>
+    {% endif %}
+{% endmacro %}
+
 {% macro input(name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
     <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" class="form-control{% if type == 'color' %} form-control-color{% endif %}"/>
@@ -56,6 +62,42 @@
 {% macro editor(name, value, entry, help, required, classes) %}
     {{ _self.begin(name, entry, required, classes) }}
     <textarea name="{{ name }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro input_ml(languages, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    {% for language in languages %}
+        <div class="input-group">
+            <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
+            <input type="{{ type|default('text') }}" name="{{ name }}[{{ language.language_id }}]" value="{{ value[language.language_id] }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}" class="form-control{% if type == 'color' %} form-control-color{% endif %}"/>
+        </div>
+        {{ _self.mlend(name, language) }}
+    {% endfor %}
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro textarea_ml(languages, name, value, entry, help, required, classes, rows_count) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    {% for language in languages %}
+        <div class="input-group">
+            <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
+            <textarea name="{{ mod }}_js_ml[{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value[language.language_id] }}</textarea>
+        </div>
+        {{ _self.mlend(name, language) }}
+    {% endfor %}
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro editor_ml(languages, name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    {% for language in languages %}
+        <div>
+            <div class="input-group-text rounded-0 border-bottom-0"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
+            <textarea name="{{ mod }}_js_ml[{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}" data-oc-toggle="ckeditor" class="position-relative form-control">{{ value[language.language_id] }}</textarea>
+        </div>
+        {{ _self.mlend(name, language) }}
+    {% endfor %}
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
@@ -109,9 +151,9 @@
     {{ _self.begin(name, entry, required, classes) }}
     <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" list="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete"/>
     <datalist id="list-{{ name }}"></datalist>
-    <div class="form-control p-0" style="min-height: 142px;">
+    <div class="form-control p-0 position-relative" style="min-height: 142px;">
         <table data-id="{{ name }}" class="table table-sm m-0">
-            <tbody class="item-well">
+            <tbody class="item-well lh-1">
                 {% for item in value %}
                     <tr data-id="{{ name }}-{{ item.param_value }}">
                         <td class="w-100"><i class="fas fa-arrows-alt-v"></i> {{ item.param_label }}<input type="hidden" name="{{ name }}[]" value="{{ item.param_value }}"/></td>
@@ -120,6 +162,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
     </div>
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
@@ -128,9 +171,9 @@
     {{ _self.begin(name, entry, required, classes) }}
     <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" list="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>
     <datalist id="list-{{ name }}"></datalist>
-    <div class="form-control p-0" style="height: 37px;">
+    <div class="form-control p-0 position-relative" style="height: 37px;">
         <table data-id="{{ name }}" class="table table-sm m-0">
-            <tbody class="item-well">
+            <tbody class="item-well lh-1">
                 {% if value %}
                     <tr data-id="{{ name }}-{{ value.param_value }}">
                         <td>{{ value.param_label }}<input type="hidden" name="{{ name }}" value="{{ value.param_value }}"/></td>
@@ -139,6 +182,7 @@
                 {% endif %}
             </tbody>
         </table>
+        <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
     </div>
     {{ _self.end(name, help, classes) }}
 {% endmacro %}

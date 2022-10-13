@@ -50,19 +50,19 @@ function sortPanels() {
         handle: '.sort-btn',
         start: function (event, ui) {
             var ids_textarea = [];
-            ui.item.find("textarea[data-oc-toggle=\'ckeditor\']").each(function (){
+            ui.item.find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
                 ids_textarea.push($(this).attr("id"))
             });
-            ids_textarea.forEach(function(item, i, ids_textarea) {
+            ids_textarea.forEach(function (item, i, ids_textarea) {
                 CKEDITOR.instances[item].destroy();
             });
         },
         stop: function (event, ui) {
             var ids_textarea = [];
-            ui.item.find("textarea[data-oc-toggle=\'ckeditor\']").each(function (){
+            ui.item.find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
                 ids_textarea.push($(this).attr("id"))
             });
-            ids_textarea.forEach(function(item, i, ids_textarea) {
+            ids_textarea.forEach(function (item, i, ids_textarea) {
                 CKEDITOR.replace(item);
             });
         }
@@ -83,10 +83,10 @@ function navTabs(el) {
             dragstart_i = $(ui.item[0]).index();
             var id = $(ui.item[0]).data('bs-target');
             var ids_textarea = [];
-            $(id).find("textarea[data-oc-toggle=\'ckeditor\']").each(function (){
+            $(id).find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
                 ids_textarea.push($(this).attr("id"))
             });
-            ids_textarea.forEach(function(item, i, ids_textarea) {
+            ids_textarea.forEach(function (item, i, ids_textarea) {
                 CKEDITOR.instances[item].destroy();
             });
         },
@@ -99,56 +99,67 @@ function navTabs(el) {
                 $(id).insertAfter($(id).parent().find('.tab-pane').eq(i));
             }
             var ids_textarea = [];
-            $(id).find("textarea[data-oc-toggle=\'ckeditor\']").each(function (){
+            $(id).find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
                 ids_textarea.push($(this).attr("id"))
             });
-            ids_textarea.forEach(function(item, i, ids_textarea) {
+            ids_textarea.forEach(function (item, i, ids_textarea) {
                 CKEDITOR.replace(item);
             });
         }
     });
 }
 
+function autocompleteTypes(path) {
+    var param_value, param_label;
+    switch (path) {
+        case 'catalog/product|autocomplete':
+            param_value = 'product_id';
+            param_label = 'name';
+            break;
+        case 'catalog/category|autocomplete':
+            param_value = 'category_id';
+            param_label = 'name';
+            break;
+        case 'catalog/manufacturer|autocomplete':
+            param_value = 'manufacturer_id';
+            param_label = 'name';
+            break;
+        case 'catalog/option|autocomplete':
+            param_value = 'option_id';
+            param_label = 'name';
+            break;
+        case 'catalog/attribute|autocomplete':
+            param_value = 'attribute_id';
+            param_label = 'name';
+            break;
+        default:
+            param_value = 'param_value';
+            param_label = 'param_label';
+            break;
+    }
+    return [param_value, param_label];
+}
+
 function fireAutocomplete() {
     $('input.item-autocomplete').autocomplete({
         'source': function (request, response) {
+            var get_str = 'index.php?route=' + $(this).data('path');
+            get_str += '&user_token=' + user_token;
+            if (typeof autocomplete_limit !== 'undefined') {
+                get_str += '&limit=' + autocomplete_limit;
+            }
+            get_str += '&filter_name=' + encodeURIComponent(request);
             $.ajax({
-                url: 'index.php?route=' + $(this).data('path') + '&user_token=' + user_token + '&limit=' + autocomplete_limit + '&filter_name=' + encodeURIComponent(request),
+                url: get_str,
                 dataType: 'json',
                 success: function (json) {
-                    var param_label, param_value;
-                    var path = $(document.activeElement).data('path');
+                    var path = $(document.activeElement).data('path').split('&');
+                    var types = autocompleteTypes(path[0]);
 
-                    switch (path) {
-                        case 'catalog/product|autocomplete':
-                            param_value = 'product_id';
-                            param_label = 'name';
-                            break;
-                        case 'catalog/category|autocomplete':
-                            param_value = 'category_id';
-                            param_label = 'name';
-                            break;
-                        case 'catalog/manufacturer|autocomplete':
-                            param_value = 'manufacturer_id';
-                            param_label = 'name';
-                            break;
-                        case 'catalog/option|autocomplete':
-                            param_value = 'option_id';
-                            param_label = 'name';
-                            break;
-                        case 'catalog/attribute|autocomplete':
-                            param_value = 'attribute_id';
-                            param_label = 'name';
-                            break;
-                        default:
-                            param_value = 'param_value';
-                            param_label = 'param_label';
-                            break;
-                    }
                     response($.map(json, function (item) {
                         return {
-                            label: item[param_label],
-                            value: item[param_value]
+                            value: item[types[0]],
+                            label: item[types[1]],
                         }
                     }));
                 }
@@ -156,30 +167,44 @@ function fireAutocomplete() {
         },
         'select': function (item) {
             $(this).val('');
-
-            var el = $(this).siblings('.form-control').find('table');
-            var field = el.data('id');
-            var html = '';
-
-            if ($(this).data('one') === 1) {
-                el.find('tbody').html('');
-                html += '<tr data-id="' + field + '-' + item['value'] + '">';
-                html += '  <td>' + item['label'] + '<input type="hidden" name="' + field + '" value="' + item['value'] + '"/></td>';
-                html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
-                html += '</tr>';
-                el.append(html);
-            } else {
-                $('#' + field + '-' + item['value']).remove();
-                $('[data-id="' + field + '-' + item['value'] + '"]').remove();
-                html += '<tr data-id="' + field + '-' + item['value'] + '">';
-                html += '  <td class="w-100"><i class="fas fa-arrows-alt-v"></i> ' + item['label'] + '<input type="hidden" name="' + field + '[]" value="' + item['value'] + '"/></td>';
-                html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
-                html += '</tr>';
-                el.append(html);
-            }
-            sortAutocompleteItems();
+            let table = $(this).siblings('.form-control').find('table');
+            createAcItem($(this), table, item);
         }
     });
+    sortAutocompleteItems();
+}
+
+function createAcItem(input, table, item) {
+    var field = table.data('id');
+    var html = '';
+
+    if (input.data('one') === 1) {
+        table.find('tbody').html('');
+        html += '<tr data-id="' + field + '-' + item['value'] + '">';
+        html += '  <td>' + item['label'] + '<input type="hidden" name="' + field + '" value="' + item['value'] + '"/></td>';
+        html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
+        html += '</tr>';
+        table.append(html);
+    } else {
+        $('#' + field + '-' + item['value']).remove();
+        $('[data-id="' + field + '-' + item['value'] + '"]').remove();
+        html += '<tr data-id="' + field + '-' + item['value'] + '">';
+        html += '  <td class="w-100"><i class="fas fa-arrows-alt-v"></i> ' + item['label'] + '<input type="hidden" name="' + field + '[]" value="' + item['value'] + '"/></td>';
+        html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
+        html += '</tr>';
+        table.append(html);
+    }
+
+    $(table).trigger('acItemSelected', [item['value'], item['label']]);
+    sortAutocompleteItems();
+}
+
+function removeAcItem(table, val) {
+    var tr = table.find('[value="' + val + '"]').closest('tr');
+    table.trigger('acItemRemoved', [val, tr.text().trim()]);
+    tr.remove();
+
+    popAutoheadingText(table.closest('.row-autoheading'));
 }
 
 function sortAutocompleteItems() {
@@ -193,6 +218,7 @@ function addAutoheadingClass() {
         var panel = $(this).closest('.card-header').next('.card-body');
         var id = $(this).data('row');
         var el = $(panel).find('.row').eq(id).addClass('row-autoheading');
+
         popAutoheadingText(el);
     });
 }
@@ -226,14 +252,110 @@ function popAutoheadingText(el) {
     }
 }
 
+function getAllElements(el) {
+    var table = el.prev('table');
+    var checked = [];
+    $(table).find('[type="hidden"]').each(function (index) {
+        checked.push($(this).val());
+    });
+    var input = table.parent().siblings('[data-path]');
+    var path = input.data('path');
+    var name = encodeURIComponent(input.val());
+    $.ajax({
+        //Fallback &limit=1000 for default opencart autocmplete methods
+        url: 'index.php?route=' + path + '&limit=1000&user_token=' + user_token + '&filter_name=' + name + '&filter_all',
+        complete: function () {
+            $('#modal-elements [data-loader]').remove();
+        },
+        dataType: 'json',
+        success: function (json) {
+            path = path.split('&');
+            var types = autocompleteTypes(path[0]);
+
+            $.map(json, function (item) {
+                return {
+                    value: item[types[0]],
+                    label: item[types[1]],
+                }
+            });
+
+            var html = '';
+            $.each(json, function (index, value) {
+                let is_checked;
+                if (checked.includes(value[types[0]])) {
+                    is_checked = 'checked';
+                }
+                let input_type = 'type="checkbox" name="fd-chekbox[]"';
+                if (input.data('one') === 1) {
+                    input_type = 'type="radio" name="fd-radio"';
+                }
+                html += '<div class="form-check">';
+                html += '  <input class="form-check-input"  ' + input_type + is_checked + ' value="' + value[types[0]] + '" id="fd-' + value[types[0]] + '">';
+                html += '  <label class="form-check-label" for="fd-' + value[types[0]] + '">' + value[types[1]] + '</label>';
+                html += '</div>';
+            })
+            $('#modal-elements-items').html(html);
+        }
+    });
+}
+
 $(document)
     .on('click', '.btn-remove-item', function () {
-        var parentAH = $(this).closest('.row-autoheading');
-        $(this).closest('tr').remove();
-        popAutoheadingText(parentAH);
+        let val = $(this).closest('tr').find('[type="hidden"]').val();
+        let table = $(this).closest('table');
+
+        removeAcItem(table, val);
+    })
+    .on('change', '[name="fd-chekbox[]"], [name="fd-radio"]', function () {
+        let el = $(this);
+        let table = $('.active[data-all-el]').prev('table');
+        let input = table.parent().siblings('[data-path]');
+        let item = {
+            value: el.val(),
+            label: el.siblings('label').text(),
+        }
+        if (el.is(':checked')) {
+            createAcItem(input, table, item);
+        } else {
+            removeAcItem(table, el.val())
+        }
     })
     .on('change', '.row-autoheading', function () {
         popAutoheadingText($(this));
+    })
+    .on('click', '[data-all-el]', function (e) {
+        e.preventDefault();
+        $(this).addClass('active');
+        var h = $(this).closest('.form-control').parent().prev('label').text();
+        $('#modal-elements').remove();
+        html = '  <div class="modal-dialog modal-xl">';
+        html += '    <div class="modal-content">';
+        html += '    <div data-loader class="d-flex justify-content-center align-items-center position-absolute top-0 left-0 w-100 h-100 bg-light" style="z-index: 1090;">' +
+            '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span>' +
+            '</div>' +
+            '</div>';
+        html += '      <div class="modal-header">';
+        html += '        <h5>' + h + '</h5>';
+        html += '        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>';
+        html += '      </div>';
+        html += '      <div class="modal-body">' +
+            '<div class="position-absolute px-3 py-0 end-0 start-0" style="margin-top: -28px;">' +
+            '<input type="range" class="form-range" value="2" min="1" max="5" id="modal-elements-range"></div>' +
+            '<div style="columns: 2" id="modal-elements-items"></div>' +
+            '</div>';
+        html += '    </div>';
+        html += '  </div>';
+        $('body').append('<div id="modal-elements" class="modal">' + html + '</div>');
+        $('#modal-elements').modal('show');
+    })
+    .on('change', '#modal-elements-range', function () {
+        $('#modal-elements-items').css('columns', $(this).val());
+    })
+    .on('shown.bs.modal', '#modal-elements', function () {
+        getAllElements($('.active[data-all-el]'));
+    })
+    .on('hide.bs.modal', '#modal-elements', function () {
+        $('.active[data-all-el]').removeClass('active');
     })
     .on('click', '.fontello-btn', function (e) {
         e.preventDefault();
@@ -271,7 +393,6 @@ $(document)
             navTabs('#mljs-cards');
         }
         fireAutocomplete();
-        sortAutocompleteItems();
         addAutoheadingClass();
         $('textarea[data-oc-toggle=\'ckeditor\']').ckeditor();
     })

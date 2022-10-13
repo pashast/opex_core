@@ -109,9 +109,9 @@
     {{ _self.begin(lang, name, entry, required, classes) }}
     <input type="text" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" list="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete"/>
     <datalist id="list-{{ name }}-{{ lang }}"></datalist>
-    <div class="form-control p-0" style="min-height: 142px;">
+    <div class="form-control p-0 position-relative" style="min-height: 142px;">
         <table data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]" class="table table-sm m-0">
-            <tbody class="item-well">
+            <tbody class="item-well lh-1">
             {% for item in value %}
                 <tr data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]-{{ item.param_value }}">
                     <td class="w-100"><i class="fas fa-arrows-alt-v"></i> {{ item.param_label }}<input type="hidden" name="{{ mod }}_ml[{{ lang }}][{{ name }}][]" value="{{ item.param_value }}"/></td>
@@ -120,6 +120,7 @@
             {% endfor %}
             </tbody>
         </table>
+        <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
     </div>
     {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
@@ -128,9 +129,9 @@
     {{ _self.begin(lang, name, entry, required, classes) }}
     <input type="text" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" list="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>
     <datalist id="list-{{ name }}-{{ lang }}"></datalist>
-    <div class="form-control p-0" style="height: 37px;">
+    <div class="form-control p-0 position-relative" style="height: 37px;">
         <table data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]" class="table table-sm m-0">
-            <tbody class="item-well">
+            <tbody class="item-well lh-1">
             {% if value %}
                 <tr data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]-{{ value.param_value }}">
                     <td>{{ value.param_label }}<input type="hidden" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value.param_value }}"/></td>
@@ -139,6 +140,7 @@
             {% endif %}
             </tbody>
         </table>
+        <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
     </div>
     {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}

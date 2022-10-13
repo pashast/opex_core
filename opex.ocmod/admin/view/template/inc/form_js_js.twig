@@ -72,12 +72,12 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
     {{ _self.end(name, languages, help, classes) }}
 {% endmacro %}
 
-{% macro textarea_ml(mod, languages, name, value, entry, help, required, classes) %}
+{% macro textarea_ml(mod, languages, name, value, entry, help, required, classes, rows_count) %}
     {{ _self.begin(name, entry, required, classes) }}
     {% for language in languages %}
       html += '<div class="input-group">';
       html += '  <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>';
-      html += '  <textarea name="{{ mod }}_js_ml[' + id + '][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" class="form-control"></textarea>';
+      html += '  <textarea name="{{ mod }}_js_ml[' + id + '][{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}-' + id + '" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}></textarea>';
       html += '</div>';
       {{ _self.mlend(name, language) }}
     {% endfor %}
@@ -155,11 +155,12 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
     {{ _self.begin(name, entry, required, classes) }}
     html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" list="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete"/>';
     html += '<datalist id="list-{{ name }}-' + id + '"></datalist>';
-    html += '<div class="form-control p-0" style="min-height: 142px;">';
+    html += '<div class="form-control p-0 position-relative" style="min-height: 142px;">';
     html += '    <table data-id="{{ mod }}_js[' + id + '][{{ name }}]" class="table table-sm m-0">';
-    html += '        <tbody class="item-well">';
+    html += '        <tbody class="item-well lh-1">';
     html += '        </tbody>';
     html += '    </table>';
+    html += '    <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>';
     html += '</div>';
     {{ _self.end(name, '', help, classes) }}
 {% endmacro %}
@@ -168,11 +169,12 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
     {{ _self.begin(name, entry, required, classes) }}
     html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" list="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>';
     html += '<datalist id="list-{{ name }}-' + id + '"></datalist>';
-    html += '<div class="form-control p-0" style="height: 37px;">';
+    html += '<div class="form-control p-0 position-relative" style="height: 37px;">';
     html += '    <table data-id="{{ mod }}_js[' + id + '][{{ name }}]" class="table table-sm m-0">';
-    html += '        <tbody class="item-well">';
+    html += '        <tbody class="item-well lh-1">';
     html += '        </tbody>';
     html += '    </table>';
+    html += '    <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>';
     html += '</div>';
     {{ _self.end(name, '', help, classes) }}
 {% endmacro %}

@@ -111,11 +111,12 @@ html += '</div>';
     {{ _self.begin(name, entry, required, classes) }}
     html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" list="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete"/>';
     html += '<datalist id="list-{{ name }}-' + lang + '-' + id + '"></datalist>';
-    html += '<div class="form-control p-0" style="min-height: 142px;">';
+    html += '<div class="form-control p-0 position-relative" style="min-height: 142px;">';
     html += '    <table data-id="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
-    html += '        <tbody class="item-well">';
+    html += '        <tbody class="item-well lh-1">';
     html += '        </tbody>';
     html += '    </table>';
+    html += '    <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>';
     html += '</div>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
@@ -124,11 +125,12 @@ html += '</div>';
     {{ _self.begin(name, entry, required, classes) }}
     html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" list="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>';
     html += '<datalist id="list-{{ name }}-' + lang + '-' + id + '"></datalist>';
-    html += '<div class="form-control p-0" style="height: 37px;">';
+    html += '<div class="form-control p-0 position-relative" style="height: 37px;">';
     html += '    <table data-id="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
-    html += '        <tbody class="item-well">';
+    html += '        <tbody class="item-well lh-1">';
     html += '        </tbody>';
     html += '    </table>';
+    html += '    <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>';
     html += '</div>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
