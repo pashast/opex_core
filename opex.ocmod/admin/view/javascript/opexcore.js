@@ -262,8 +262,8 @@ function getAllElements(el) {
     var path = input.data('path');
     var name = encodeURIComponent(input.val());
     var full_limit = 1000
-    if (typeof full_autocomplete_limit !== 'undefined') {
-        full_limit = full_autocomplete_limit;
+    if (typeof opex_ac_full_limit !== 'undefined') {
+        full_limit = opex_ac_full_limit;
     }
     $.ajax({
         url: 'index.php?route=' + path + '&limit=' + full_limit + '&user_token=' + user_token + '&filter_name=' + name,
