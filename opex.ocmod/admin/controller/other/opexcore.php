@@ -24,7 +24,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
             'href' => $this->url->link('extension/opex/other/opexcore', 'user_token=' . $this->session->data['user_token'])
         ];
 
-        $data['save'] = $this->url->link('extension/opex/other/opexcore|save', 'user_token=' . $this->session->data['user_token']);
+        $data['save'] = $this->url->link('extension/opex/other/opexcore.save', 'user_token=' . $this->session->data['user_token']);
         $data['back'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=other');
 
         $data['other_opexcore_status'] = $this->config->get('other_opexcore_status');
@@ -33,6 +33,12 @@ class Opexcore extends \Opencart\System\Engine\Controller {
             $data['other_opexcore_ac_limit'] = $this->config->get('other_opexcore_ac_limit');
         } else {
             $data['other_opexcore_ac_limit'] = 5;
+        }
+
+        if ($this->config->get('other_opexcore_ac_full_limit')) {
+            $data['other_opexcore_ac_full_limit'] = $this->config->get('other_opexcore_ac_full_limit');
+        } else {
+            $data['other_opexcore_ac_full_limit'] = 1000;
         }
 
         $data['header']      = $this->load->controller('common/header');
@@ -124,7 +130,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
     public function proceedFields(string $func_name, string|array $var): array {
         $output = [];
         if ($var) {
-            $separator = '|';
+            $separator = '.';
             if (is_string($var)) {
                 $string_flag = true;
                 $var         = [$var];
@@ -265,7 +271,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
             if ($option_info) {
                 $response[] = [
                     'param_value' => $option_id,
-                    'param_label' => $option_info['name']
+                    'param_label' => $option_info['name'] . ' [' . $option_info['type'] . ']'
                 ];
             }
         }
@@ -273,15 +279,15 @@ class Opexcore extends \Opencart\System\Engine\Controller {
     }
 
     public function reverseAutocompleteAttributes($var): array {
-        $this->load->model('catalog/attribute');
+        $this->load->model('extension/opex/other/opexcore');
         $response = [];
 
         foreach ($var as $attribute_id) {
-            $attribute_info = $this->model_catalog_attribute->getAttribute($attribute_id);
+            $attribute_info = $this->model_extension_opex_other_opexcore->getAttribute($attribute_id);
             if ($attribute_info) {
                 $response[] = [
                     'param_value' => $attribute_id,
-                    'param_label' => $attribute_info['name']
+                    'param_label' => $attribute_info['name']  . ' [' . $attribute_info['group_name'] . ']'
                 ];
             }
         }
@@ -299,10 +305,6 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 'start'       => 0,
                 'limit'       => (int)($this->request->get['limit'] ?? 5)
             ];
-
-            if (isset($this->request->get['filter_all'])) {
-                unset($filter_data['start'], $filter_data['limit']);
-            }
 
             $results = $this->model_extension_opex_other_opexcore->getAutocompleteInformations($filter_data);
 
@@ -331,10 +333,6 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 'limit'       => (int)($this->request->get['limit'] ?? 5)
             ];
 
-            if (isset($this->request->get['filter_all'])) {
-                unset($filter_data['start'], $filter_data['limit']);
-            }
-
             $results = $this->model_extension_opex_other_opexcore->getAutocompleteModules($filter_data);
 
             foreach ($results as $result) {
@@ -360,10 +358,6 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 'start'       => 0,
                 'limit'       => (int)($this->request->get['limit'] ?? 5)
             ];
-
-            if (isset($this->request->get['filter_all'])) {
-                unset($filter_data['start'], $filter_data['limit']);
-            }
 
             $results = $this->model_extension_opex_other_opexcore->getAutocompleteLayout($filter_data);
 
@@ -393,10 +387,6 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 'limit'       => (int)($this->request->get['limit'] ?? 5)
             ];
 
-            if (isset($this->request->get['filter_all'])) {
-                unset($filter_data['start'], $filter_data['limit']);
-            }
-
             $results = $this->model_catalog_category->getCategories($filter_data);
 
             foreach ($results as $result) {
@@ -422,10 +412,6 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 'start'       => 0,
                 'limit'       => (int)($this->request->get['limit'] ?? 5)
             ];
-
-            if (isset($this->request->get['filter_all'])) {
-                unset($filter_data['start'], $filter_data['limit']);
-            }
 
             $results = $this->model_catalog_manufacturer->getManufacturers($filter_data);
 
@@ -453,16 +439,12 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 'limit'       => (int)($this->request->get['limit'] ?? 5)
             ];
 
-            if (isset($this->request->get['filter_all'])) {
-                unset($filter_data['start'], $filter_data['limit']);
-            }
-
             $results = $this->model_catalog_option->getOptions($filter_data);
 
             foreach ($results as $result) {
                 $json[] = [
                     'param_value' => $result['option_id'],
-                    'param_label' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+                    'param_label' => strip_tags(html_entity_decode($result['name'] . ' [' . $result['type'] . ']', ENT_QUOTES, 'UTF-8'))
                 ];
             }
         }
@@ -483,16 +465,12 @@ class Opexcore extends \Opencart\System\Engine\Controller {
                 'limit'       => (int)($this->request->get['limit'] ?? 5)
             ];
 
-            if (isset($this->request->get['filter_all'])) {
-                unset($filter_data['start'], $filter_data['limit']);
-            }
-
             $results = $this->model_catalog_attribute->getAttributes($filter_data);
 
             foreach ($results as $result) {
                 $json[] = [
                     'param_value' => $result['attribute_id'],
-                    'param_label' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+                    'param_label' => strip_tags(html_entity_decode($result['name']  . ' [' . $result['attribute_group'] . ']', ENT_QUOTES, 'UTF-8'))
                 ];
             }
         }

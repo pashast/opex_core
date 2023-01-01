@@ -107,8 +107,8 @@
 
 {% macro autocomplete(key, lang, mod, name, value, entry, help, required, classes, type) %}
   {{ _self.begin(key, lang, name, entry, required, classes) }}
-  <input type="text" name="input-{{ name }}-{{ lang }}-{{ key }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}-{{ key }}" list="list-{{ name }}-{{ lang }}-{{ key }}" data-path="{{ type }}" class="form-control item-autocomplete"/>
-  <datalist id="list-{{ name }}-{{ lang }}-{{ key }}"></datalist>
+  <input type="text" name="input-{{ name }}-{{ lang }}-{{ key }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}-{{ key }}" data-oc-target="list-{{ name }}-{{ lang }}-{{ key }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
+  <ul id="list-{{ name }}-{{ lang }}-{{ key }}" class="dropdown-menu"></ul>
   <div class="form-control p-0 position-relative" style="min-height: 142px;">
     <table data-id="{{ mod }}_mljs[{{ lang }}][{{ key }}][{{ name }}]" class="table table-sm m-0">
       <tbody class="item-well lh-1">
@@ -129,8 +129,8 @@
 
 {% macro autocompleteone(key, lang, mod, name, value, entry, help, required, classes, type) %}
   {{ _self.begin(key, lang, name, entry, required, classes) }}
-  <input type="text" name="input-{{ name }}-{{ lang }}-{{ key }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}-{{ key }}" list="list-{{ name }}-{{ lang }}-{{ key }}" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>
-  <datalist id="list-{{ name }}-{{ lang }}-{{ key }}"></datalist>
+  <input type="text" name="input-{{ name }}-{{ lang }}-{{ key }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}-{{ key }}" data-oc-target="list-{{ name }}-{{ lang }}-{{ key }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
+  <ul id="list-{{ name }}-{{ lang }}-{{ key }}" class="dropdown-menu"></ul>
   <div class="form-control p-0 position-relative" style="height: 37px;">
     <table data-id="{{ mod }}_mljs[{{ lang }}][{{ key }}][{{ name }}]" class="table table-sm m-0">
       <tbody class="item-well lh-1">

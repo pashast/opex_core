@@ -109,8 +109,8 @@ html += '</div>';
 
 {% macro autocomplete(mod, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" list="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete"/>';
-    html += '<datalist id="list-{{ name }}-' + lang + '-' + id + '"></datalist>';
+    html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-target="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>';
+    html += '<ul id="list-{{ name }}-' + lang + '-' + id + '" class="dropdown-menu"></ul>';
     html += '<div class="form-control p-0 position-relative" style="min-height: 142px;">';
     html += '    <table data-id="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
     html += '        <tbody class="item-well lh-1">';
@@ -123,8 +123,8 @@ html += '</div>';
 
 {% macro autocompleteone(mod, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" list="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>';
-    html += '<datalist id="list-{{ name }}-' + lang + '-' + id + '"></datalist>';
+    html += '<input type="text" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-target="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>';
+    html += '<ul id="list-{{ name }}-' + lang + '-' + id + '" class="dropdown-menu"></ul>';
     html += '<div class="form-control p-0 position-relative" style="height: 37px;">';
     html += '    <table data-id="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
     html += '        <tbody class="item-well lh-1">';

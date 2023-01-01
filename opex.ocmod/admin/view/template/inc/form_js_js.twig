@@ -153,8 +153,8 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
 
 {% macro autocomplete(mod, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" list="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete"/>';
-    html += '<datalist id="list-{{ name }}-' + id + '"></datalist>';
+    html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" data-oc-target="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>';
+    html += '<ul id="list-{{ name }}-' + id + '" class="dropdown-menu"></ul>';
     html += '<div class="form-control p-0 position-relative" style="min-height: 142px;">';
     html += '    <table data-id="{{ mod }}_js[' + id + '][{{ name }}]" class="table table-sm m-0">';
     html += '        <tbody class="item-well lh-1">';
@@ -167,8 +167,8 @@ html += '        <div id="error-{{ name|replace({'_': '-'}) }}-{{ language.langu
 
 {% macro autocompleteone(mod, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" list="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" data-one="1"/>';
-    html += '<datalist id="list-{{ name }}-' + id + '"></datalist>';
+    html += '<input type="text" name="input-{{ name }}-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + id + '" data-oc-target="list-{{ name }}-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>';
+    html += '<ul id="list-{{ name }}-' + id + '" class="dropdown-menu"></ul>';
     html += '<div class="form-control p-0 position-relative" style="height: 37px;">';
     html += '    <table data-id="{{ mod }}_js[' + id + '][{{ name }}]" class="table table-sm m-0">';
     html += '        <tbody class="item-well lh-1">';

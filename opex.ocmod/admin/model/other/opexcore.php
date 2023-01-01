@@ -57,11 +57,6 @@ class Opexcore extends \Opencart\System\Engine\Model {
         return $query->rows;
     }
 
-    public function getModule(int $module_id): array {
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "module` WHERE `module_id` = '" . $module_id . "'");
-        return $query->row;
-    }
-
     public function getAutocompleteLayout(array $data = []): array {
         $sql = "SELECT * FROM `" . DB_PREFIX . "layout`";
 
@@ -88,8 +83,18 @@ class Opexcore extends \Opencart\System\Engine\Model {
         return $query->rows;
     }
 
+    public function getAttribute(int $attribute_id): array {
+        $query = $this->db->query("SELECT *, ad.name AS group_name FROM `" . DB_PREFIX . "attribute` a LEFT JOIN `" . DB_PREFIX . "attribute_description` ad ON (a.`attribute_id` = ad.`attribute_id`) WHERE a.`attribute_id` = '" . (int)$attribute_id . "' AND ad.`language_id` = '" . (int)$this->config->get('config_language_id') . "'");
+        return $query->row;
+    }
+
     public function getLayout(int $layout_id): array {
         $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "layout` WHERE `layout_id` = '" . $layout_id . "'");
+        return $query->row;
+    }
+
+    public function getModule(int $module_id): array {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "module` WHERE `module_id` = '" . $module_id . "'");
         return $query->row;
     }
 }

@@ -112,29 +112,31 @@ function navTabs(el) {
 function autocompleteTypes(path) {
     var param_value, param_label;
     switch (path) {
-        case 'catalog/product|autocomplete':
+        //Стандартні автокомліти опенкарт
+        case 'catalog/product.autocomplete':
             param_value = 'product_id';
             param_label = 'name';
             break;
-        case 'catalog/category|autocomplete':
+        case 'catalog/category.autocomplete':
             param_value = 'category_id';
             param_label = 'name';
             break;
-        case 'catalog/manufacturer|autocomplete':
+        case 'catalog/manufacturer.autocomplete':
             param_value = 'manufacturer_id';
             param_label = 'name';
             break;
-        case 'catalog/option|autocomplete':
+        case 'catalog/option.autocomplete':
             param_value = 'option_id';
             param_label = 'name';
             break;
-        case 'catalog/attribute|autocomplete':
+        case 'catalog/attribute.autocomplete':
             param_value = 'attribute_id';
             param_label = 'name';
             break;
+        //Кастомний автокомліт
         default:
-            param_value = 'param_value';
-            param_label = 'param_label';
+            param_value = 'param_value'; //ID
+            param_label = 'param_label'; //Назва
             break;
     }
     return [param_value, param_label];
@@ -143,14 +145,12 @@ function autocompleteTypes(path) {
 function fireAutocomplete() {
     $('input.item-autocomplete').autocomplete({
         'source': function (request, response) {
-            var get_str = 'index.php?route=' + $(this).data('path');
-            get_str += '&user_token=' + user_token;
-            if (typeof autocomplete_limit !== 'undefined') {
-                get_str += '&limit=' + autocomplete_limit;
+            var limit = 5
+            if (typeof opex_ac_limit !== 'undefined') {
+                limit = opex_ac_limit;
             }
-            get_str += '&filter_name=' + encodeURIComponent(request);
             $.ajax({
-                url: get_str,
+                url: 'index.php?route=' + $(this).data('path') + '&user_token=' + user_token + '&limit=' + limit + '&filter_name=' + encodeURIComponent(request),
                 dataType: 'json',
                 success: function (json) {
                     var path = $(document.activeElement).data('path').split('&');
@@ -261,9 +261,12 @@ function getAllElements(el) {
     var input = table.parent().siblings('[data-path]');
     var path = input.data('path');
     var name = encodeURIComponent(input.val());
+    var full_limit = 1000
+    if (typeof full_autocomplete_limit !== 'undefined') {
+        full_limit = full_autocomplete_limit;
+    }
     $.ajax({
-        //Fallback &limit=1000 for default opencart autocmplete methods
-        url: 'index.php?route=' + path + '&limit=1000&user_token=' + user_token + '&filter_name=' + name + '&filter_all',
+        url: 'index.php?route=' + path + '&limit=' + full_limit + '&user_token=' + user_token + '&filter_name=' + name,
         complete: function () {
             $('#modal-elements [data-loader]').remove();
         },
