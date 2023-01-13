@@ -129,7 +129,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 
     public function proceedFields(string $func_name, string|array $var): array {
         $output = [];
-        if ($var) {
+        if (isset($var)) {
             $separator = '.';
             if (is_string($var)) {
                 $string_flag = true;
