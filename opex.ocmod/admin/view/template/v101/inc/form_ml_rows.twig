@@ -34,7 +34,15 @@
 
 {% macro input(lang, mod, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(lang, name, entry, required, classes) }}
-    <input type="{{ type|default('text') }}" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-control{% if type == 'color' %} form-control-color{% endif %}"/>
+    {% if type == 'color' %}
+        {% if value matches '/^#([A-Fa-f0-9]{6})$/' %}
+            <button type="button" class="opex-remove-color position-absolute end-0 border-0 btn btn-light p-2" style="margin-right: 14px; margin-top: 2px;"><i class="fa-solid px-1 fa-circle-xmark"></i></button>
+        {% else %}
+            {% set type = 'text' %}
+            <button type="button" class="opex-add-color position-absolute end-0 border-0 btn btn-light p-2" style="margin-right: 14px; margin-top: 2px;"><i class="fa-solid px-1 fa-eye-dropper"></i></button>
+        {% endif %}
+    {% endif %}
+    <input type="{{ type|default('text') }}" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" class="form-control{% if type == 'color' %} form-control-color w-100{% endif %}"/>
     {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
 
@@ -115,12 +123,12 @@
             {% for item in value %}
                 <tr data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]-{{ item.param_value }}">
                     <td class="w-100"><i class="fas fa-arrows-alt-v"></i> {{ item.param_label }}<input type="hidden" name="{{ mod }}_ml[{{ lang }}][{{ name }}][]" value="{{ item.param_value }}"/></td>
-                    <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>
+                    <td class="text-end"><button type="button" class="btn btn-danger btn-sm opex-remove-item"><i class="fas fa-minus-circle"></i></button></td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
+        <button type="button" data-opex-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
     </div>
     {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}
@@ -135,12 +143,12 @@
             {% if value %}
                 <tr data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]-{{ value.param_value }}">
                     <td>{{ value.param_label }}<input type="hidden" name="{{ mod }}_ml[{{ lang }}][{{ name }}]" value="{{ value.param_value }}"/></td>
-                    <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>
+                    <td class="text-end"><button type="button" class="btn btn-danger btn-sm opex-remove-item"><i class="fas fa-minus-circle"></i></button></td>
                 </tr>
             {% endif %}
             </tbody>
         </table>
-        <button type="button" data-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
+        <button type="button" data-opex-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
     </div>
     {{ _self.end(lang, name, help, classes) }}
 {% endmacro %}

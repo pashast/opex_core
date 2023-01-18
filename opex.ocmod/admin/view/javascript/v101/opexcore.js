@@ -172,6 +172,9 @@ function fireAutocomplete() {
         }
     });
     sortAutocompleteItems();
+    if (typeof fontello_link == 'undefined' || !fontello_link) {
+        $('.fontello-btn').remove();
+    }
 }
 
 function createAcItem(input, table, item) {
@@ -182,7 +185,7 @@ function createAcItem(input, table, item) {
         table.find('tbody').html('');
         html += '<tr data-id="' + field + '-' + item['value'] + '">';
         html += '  <td>' + item['label'] + '<input type="hidden" name="' + field + '" value="' + item['value'] + '"/></td>';
-        html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
+        html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm opex-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
         html += '</tr>';
         table.append(html);
     } else {
@@ -190,7 +193,7 @@ function createAcItem(input, table, item) {
         $('[data-id="' + field + '-' + item['value'] + '"]').remove();
         html += '<tr data-id="' + field + '-' + item['value'] + '">';
         html += '  <td class="w-100"><i class="fas fa-arrows-alt-v"></i> ' + item['label'] + '<input type="hidden" name="' + field + '[]" value="' + item['value'] + '"/></td>';
-        html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm btn-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
+        html += '  <td class="text-end"><button type="button" class="btn btn-danger btn-sm opex-remove-item"><i class="fas fa-minus-circle"></i></button></td>';
         html += '</tr>';
         table.append(html);
     }
@@ -303,7 +306,17 @@ function getAllElements(el) {
 }
 
 $(document)
-    .on('click', '.btn-remove-item', function () {
+    .on('click', '.opex-remove-color', function () {
+        $(this).removeClass('opex-remove-color').addClass('opex-add-color');
+        $(this).find('i').removeClass('fa-circle-xmark').addClass('fa-eye-dropper');
+        $(this).next('input').attr('type', 'text').removeClass('form-control-color w-100');
+    })
+    .on('click', '.opex-add-color', function () {
+        $(this).removeClass('opex-add-color').addClass('opex-remove-color');
+        $(this).find('i').removeClass('fa-eye-dropper').addClass('fa-circle-xmark');
+        $(this).next('input').attr('type', 'color').addClass('form-control-color w-100');
+    })
+    .on('click', '.opex-remove-item', function () {
         let val = $(this).closest('tr').find('[type="hidden"]').val();
         let table = $(this).closest('table');
 
@@ -311,7 +324,7 @@ $(document)
     })
     .on('change', '[name="fd-chekbox[]"], [name="fd-radio"]', function () {
         let el = $(this);
-        let table = $('.active[data-all-el]').prev('table');
+        let table = $('.active[data-opex-all-el]').prev('table');
         let input = table.parent().siblings('[data-path]');
         let item = {
             value: el.val(),
@@ -326,7 +339,7 @@ $(document)
     .on('change', '.row-autoheading', function () {
         popAutoheadingText($(this));
     })
-    .on('click', '[data-all-el]', function (e) {
+    .on('click', '[data-opex-all-el]', function (e) {
         e.preventDefault();
         $(this).addClass('active');
         var h = $(this).closest('.form-control').parent().prev('label').text();
@@ -355,10 +368,10 @@ $(document)
         $('#modal-elements-items').css('columns', $(this).val());
     })
     .on('shown.bs.modal', '#modal-elements', function () {
-        getAllElements($('.active[data-all-el]'));
+        getAllElements($('.active[data-opex-all-el]'));
     })
     .on('hide.bs.modal', '#modal-elements', function () {
-        $('.active[data-all-el]').removeClass('active');
+        $('.active[data-opex-all-el]').removeClass('active');
     })
     .on('click', '.fontello-btn', function (e) {
         e.preventDefault();
