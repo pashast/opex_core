@@ -4,21 +4,21 @@
 <div class="{{ classes.0 }} {{ required ? 'required' : '' }}">
 {% endif %}
 {% if classes.1 != 'del' %}
-    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-'}) }}">{{ entry }}</label>
+    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}">{{ entry }}</label>
 {% endif %}
 {% if classes.2 != 'del' %}
     <div class="{{ classes.2 }}">
 {% endif %}
 {% else %}
 <div class="row mb-3 {{ required ? 'required' : '' }}">
-    <label class="col-sm-2 col-form-label" for="input-{{ name|replace({'_': '-'}) }}">{{ entry }}</label>
+    <label class="col-sm-2 col-form-label" for="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}">{{ entry }}</label>
     <div class="col-sm-10">
 {% endif %}
 {% endmacro %}
 
 {% macro end(name, help, classes) %}
         {% if help %} <div class="form-text">{{ help }}</div> {% endif %}
-        <div id="error-{{ name|replace({'_': '-'}) }}" class="invalid-feedback"></div>
+        <div id="error-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="invalid-feedback"></div>
 {% if classes %}
 {% if classes.2 != 'del' %}
     </div>
@@ -48,14 +48,14 @@
             <button type="button" class="opex-add-color position-absolute end-0 border-0 btn btn-light p-2" style="margin-right: 14px; margin-top: 2px;"><i class="fa-solid px-1 fa-eye-dropper"></i></button>
         {% endif %}
     {% endif %}
-    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" class="form-control{% if type == 'color' %} form-control-color w-100{% endif %}"/>
+    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control{% if type == 'color' %} form-control-color w-100{% endif %}"/>
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro fonticonpicker(name, value, entry, help, required, classes) %}
     {{ _self.begin(name, entry, required, classes) }}
     <div class="input-group">
-        <input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" class="form-control"/>
+        <input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control"/>
         <button class="btn btn-outline-secondary fontello-btn" type="button"><i class="fas fa-icons"></i></button>
     </div>
     {{ _self.end(name, help, classes) }}
@@ -63,13 +63,13 @@
 
 {% macro textarea(name, value, entry, help, required, classes, rows_count) %}
     {{ _self.begin(name, entry, required, classes) }}
-    <textarea name="{{ name }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value }}</textarea>
+    <textarea name="{{ name }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value }}</textarea>
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro editor(name, value, entry, help, required, classes) %}
     {{ _self.begin(name, entry, required, classes) }}
-    <textarea name="{{ name }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>
+    <textarea name="{{ name }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
@@ -78,7 +78,7 @@
     {% for language in languages %}
         <div class="input-group">
             <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
-            <input type="{{ type|default('text') }}" name="{{ name }}[{{ language.language_id }}]" value="{{ value[language.language_id] }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}" class="form-control"/>
+            <input type="{{ type|default('text') }}" name="{{ name }}[{{ language.language_id }}]" value="{{ value[language.language_id] }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}-{{ language.language_id }}" class="form-control"/>
         </div>
         {{ _self.mlend(name, language) }}
     {% endfor %}
@@ -90,7 +90,7 @@
     {% for language in languages %}
         <div class="input-group">
             <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
-            <textarea name="{{ mod }}_js_ml[{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value[language.language_id] }}</textarea>
+            <textarea name="{{ mod }}_js_ml[{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}-{{ language.language_id }}" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value[language.language_id] }}</textarea>
         </div>
         {{ _self.mlend(name, language) }}
     {% endfor %}
@@ -102,7 +102,7 @@
     {% for language in languages %}
         <div>
             <div class="input-group-text rounded-0 border-bottom-0"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
-            <textarea name="{{ mod }}_js_ml[{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ language.language_id }}" data-oc-toggle="ckeditor" class="position-relative form-control">{{ value[language.language_id] }}</textarea>
+            <textarea name="{{ mod }}_js_ml[{{ name }}][{{ language.language_id }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}-{{ language.language_id }}" data-oc-toggle="ckeditor" class="position-relative form-control">{{ value[language.language_id] }}</textarea>
         </div>
         {{ _self.mlend(name, language) }}
     {% endfor %}
@@ -111,7 +111,7 @@
 
 {% macro select(name, value, entry, help, required, classes, options) %}
     {{ _self.begin(name, entry, required, classes) }}
-    <select name="{{ name }}" id="input-{{ name|replace({'_': '-'}) }}" class="form-select">
+    <select name="{{ name }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-select">
         {% for key, item in options %}
             <option value="{{ key }}"{% if key == value %} selected{% endif %}>{{ item }}</option>
         {% endfor %}
@@ -123,7 +123,7 @@
   {{ _self.begin(name, entry, required, classes) }}
   <div class="form-check form-switch form-switch-lg">
     <input type="hidden" name="{{ name }}" value="0"/>
-    <input type="checkbox" name="{{ name }}" value="1" id="input-{{ name|replace({'_': '-'}) }}" class="form-check-input"{% if value %} checked{% endif %}/>
+    <input type="checkbox" name="{{ name }}" value="1" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-check-input"{% if value %} checked{% endif %}/>
   </div>
   {{ _self.end(name, help, classes) }}
 {% endmacro %}
@@ -131,7 +131,7 @@
 {% macro datetimepicker(name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
     <div class="input-group">
-        <input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" class="form-control {{ type }}" />
+        <input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control {{ type }}" />
         {% if type == 'date' %}
             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
         {% elseif type == 'time' %}
@@ -157,7 +157,7 @@
 
 {% macro autocomplete(name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
+    <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
     <ul id="list-{{ name }}" class="dropdown-menu"></ul>
     <div class="form-control p-0 position-relative" style="min-height: 142px;">
         <table data-id="{{ name }}" class="table table-sm m-0">
@@ -177,7 +177,7 @@
 
 {% macro autocompleteone(name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
+    <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
     <ul id="list-{{ name }}" class="dropdown-menu"></ul>
     <div class="form-control p-0 position-relative" style="height: 37px;">
         <table data-id="{{ name }}" class="table table-sm m-0">
