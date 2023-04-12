@@ -411,6 +411,6 @@ $(document)
         fireAutocomplete();
         addAutoheadingClass();
         if ($('[data-oc-toggle=\'ckeditor\']').length) {
-        	$('textarea[data-oc-toggle=\'ckeditor\']').ckeditor();
-		}
+            $('textarea[data-oc-toggle=\'ckeditor\']').ckeditor();
+        }
     })
