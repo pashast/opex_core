@@ -336,29 +336,46 @@ $(document)
             removeAcItem(table, el.val())
         }
     })
+	.on('keyup', '#opex-all-input', function () {
+		let value = $(this).val();
+        let button = $('.active[data-opex-all-el]');
+        let table = button.prev('table');
+        let input = table.parent().siblings('[data-path]');
+		input.val(value);
+		getAllElements(button);
+	})
     .on('change', '.row-autoheading', function () {
         popAutoheadingText($(this));
     })
     .on('click', '[data-opex-all-el]', function (e) {
         e.preventDefault();
-        $(this).addClass('active');
-        var h = $(this).closest('.form-control').parent().prev('label').text();
+		let mobile = $('header #button-menu').is(':visible');
+		$(this).addClass('active');
+		let parent = $(this).closest('.form-control').parent();
+        let t = parent.find('[data-path]').val();
+        let h = parent.prev('label').text();
         $('#modal-elements').remove();
-        html = '  <div class="modal-dialog modal-xl">';
+        html = '  <div class="modal-dialog modal-fullscreen">';
         html += '    <div class="modal-content">';
         html += '    <div data-loader class="d-flex justify-content-center align-items-center position-absolute top-0 left-0 w-100 h-100 bg-light" style="z-index: 1090;">' +
             '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span>' +
             '</div>' +
             '</div>';
         html += '      <div class="modal-header">';
-        html += '        <h5>' + h + '</h5>';
-        html += '        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>';
+        html += '        <h5>' + h + '</h5> <input type="text" class="form-control mx-2" id="opex-all-input" value="' + t + '" style="width: 260px">';
+        html += '        <button type="button" class="btn-close me-2" data-bs-dismiss="modal"></button>';
         html += '      </div>';
-        html += '      <div class="modal-body">' +
-            '<div class="position-absolute px-3 py-0 end-0 start-0" style="margin-top: -28px;">' +
-            '<input type="range" class="form-range" value="2" min="1" max="5" id="modal-elements-range"></div>' +
-            '<div style="columns: 2" id="modal-elements-items"></div>' +
-            '</div>';
+        if (mobile) {
+			html += '      <div class="modal-body">' +
+				'<div id="modal-elements-items"></div>' +
+				'</div>';
+		} else {
+			html += '      <div class="modal-body">' +
+				'<div style="margin-top: -8px;">' +
+				'<input type="range" class="form-range" value="3" min="1" max="6" id="modal-elements-range"></div>' +
+				'<div style="columns: 3" id="modal-elements-items"></div>' +
+				'</div>';
+		}
         html += '    </div>';
         html += '  </div>';
         $('body').append('<div id="modal-elements" class="modal">' + html + '</div>');
@@ -411,6 +428,6 @@ $(document)
         fireAutocomplete();
         addAutoheadingClass();
         if ($('[data-oc-toggle=\'ckeditor\']').length) {
-            $('textarea[data-oc-toggle=\'ckeditor\']').ckeditor();
-        }
+			$('textarea[data-oc-toggle=\'ckeditor\']').ckeditor();
+		}
     })
