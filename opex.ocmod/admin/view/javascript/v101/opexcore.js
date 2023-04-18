@@ -219,7 +219,7 @@ function sortAutocompleteItems() {
 function addAutoheadingClass() {
     $('.card-name').each(function () {
         var panel = $(this).closest('.card-header').next('.card-body');
-        var id = $(this).data('row');
+        var id = $(this).data('opex-ah-row');
         var el = $(panel).find('.row').eq(id).addClass('row-autoheading');
 
         popAutoheadingText(el);
@@ -291,7 +291,7 @@ function getAllElements(el) {
                 if (checked.includes(value[types[0]])) {
                     is_checked = 'checked';
                 }
-                let input_type = 'type="checkbox" name="fd-chekbox[]"';
+                let input_type = 'type="checkbox" name="fd-checkbox[]"';
                 if (input.data('one') === 1) {
                     input_type = 'type="radio" name="fd-radio"';
                 }
@@ -322,7 +322,7 @@ $(document)
 
         removeAcItem(table, val);
     })
-    .on('change', '[name="fd-chekbox[]"], [name="fd-radio"]', function () {
+    .on('change', '[name="fd-checkbox[]"], [name="fd-radio"]', function () {
         let el = $(this);
         let table = $('.active[data-opex-all-el]').prev('table');
         let input = table.parent().siblings('[data-path]');
