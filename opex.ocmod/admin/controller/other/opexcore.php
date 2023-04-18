@@ -99,33 +99,23 @@ class Opexcore extends \Opencart\System\Engine\Controller {
         return $data['input'];
     }
 
-    public function JsAddFields(array $data): array {
-        foreach ($data['input'] as $key => $value) {
-            foreach ($value as $item => $field) {
-                if (array_key_exists($item, $data['fields'])) {
-                    $data['input'][$key][$item] = $this->proceedFields($data['fields'][$item], $field);
-                }
-            }
-        }
+	public function JsAddFields(array $data): array {
+		$result = [];
 
-        if (empty($data['input_ml'])) {
-            return $data['input'];
-        }
+		foreach ($data['input'] as $key => $input) {
+			$fields = $data['fields'];
 
-        $ml_output = [];
+			foreach ($input as $fieldKey => $fieldValue) {
+				if (array_key_exists($fieldKey, $fields)) {
+					$input[$fieldKey] = $this->proceedFields($fields[$fieldKey], $fieldValue);
+				}
+			}
 
-        if (!empty($data['input'])) {
-            foreach ($data['input'] as $key => $value) {
-                $ml_output[] = array_merge($data['input_ml'][$key], $value);
-            }
-        } else {
-            foreach ($data['input_ml'] as $key => $value) {
-                $ml_output[] = $data['input_ml'][$key];
-            }
-        }
+			$result[] = array_merge($data['input_ml'][$key] ?? [], $input);
+		}
 
-        return $ml_output;
-    }
+		return $result;
+	}
 
     public function proceedFields(string $func_name, string|array $var): array {
         $output = [];
