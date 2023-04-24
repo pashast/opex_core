@@ -67,7 +67,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 		if (!$json) {
 			$this->load->model('setting/setting');
 
-			$this->model_setting_setting->editSetting('other_opex', $this->request->post);
+			$this->model_setting_setting->editSetting('other_opexcore', $this->request->post);
 
 			$json['success'] = $this->language->get('text_success');
 		}
@@ -678,10 +678,22 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 			'sort_order'  => 0
 		];
 		$this->model_setting_event->addEvent($data);
+
+		// Add startup to catalog
+		$startup_data = [
+			'code'        => 'opexcore_catalog',
+			'description' => 'Startup opex core',
+			'action'      => 'catalog/extension/opex/startup/opexcore',
+			'status'      => 1,
+			'sort_order'  => 1
+		];
+		$this->load->model('setting/startup');
+		$this->model_setting_startup->addStartup($startup_data);
 	}
 
 	public function uninstall(): void {
 		$this->load->model('setting/event');
 		$this->model_setting_event->deleteEventByCode('OpexAddLazyModulesScript');
+		$this->model_setting_startup->deleteStartupByCode('opexcore_catalog');
 	}
 }
