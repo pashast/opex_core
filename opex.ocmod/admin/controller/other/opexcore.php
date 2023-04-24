@@ -645,11 +645,14 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 				if ($f) {
 					$contents = fread($f, filesize($file_tmp));
 					fclose($f);
+					$module_info = json_decode($contents, true);
+
 					if ($module_id) {
-						$this->model_setting_module->editModule((int)$module_id, json_decode($contents, true));
+						$module_info['module_id'] = (int)$module_id;
+						$this->model_setting_module->editModule((int)$module_id, $module_info);
 						$json['redirect'] = str_replace('&amp;', '&', $this->url->link('extension/' . $part[0] . '/module/' . $part[1], 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $module_id));
 					} else {
-						$this->model_setting_module->addModule($extension, json_decode($contents, true));
+						$this->model_setting_module->addModule($extension, $module_info);
 						$new_module_id    = $this->db->getLastId();
 						$json['redirect'] = str_replace('&amp;', '&', $this->url->link('extension/' . $part[0] . '/module/' . $part[1], 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $new_module_id));
 					}
