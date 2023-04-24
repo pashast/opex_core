@@ -20,6 +20,7 @@ $_['entry_module_view_limit_store']          = 'Показувати в мага
 $_['entry_module_view_limit_customer_group'] = 'Показувати групі клієнтів';
 $_['entry_module_view_limit_product']        = 'Показувати тільки в цих товарах';
 $_['entry_module_view_limit_category']       = 'Показувати тільки в цих категоріях';
+$_['entry_module_view_limit_category_end']   = 'Не враховувати дочірні категорії';
 $_['entry_module_view_limit_manufacturer']   = 'Показувати тільки в цих виробниках';
 $_['entry_module_view_enable_filters']       = 'Застосувати фільтри';
 $_['entry_module_view_disable_css']          = 'Не підключати .css';

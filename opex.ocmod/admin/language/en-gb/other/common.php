@@ -20,6 +20,7 @@ $_['entry_module_view_limit_store']          = 'Show in stores';
 $_['entry_module_view_limit_customer_group'] = 'View to customer group';
 $_['entry_module_view_limit_product']        = 'Show only in these products';
 $_['entry_module_view_limit_category']       = 'Show only in these categories';
+$_['entry_module_view_limit_category_end']   = 'Ignore child categories';
 $_['entry_module_view_limit_manufacturer']   = 'Show only in these manufacturers';
 $_['entry_module_view_enable_filters']       = 'Apply filters';
 $_['entry_module_view_disable_css']          = 'Do not include .css';
