@@ -259,9 +259,10 @@ function getAllElements(el) {
     var table = el.prev('table');
     var checked = [];
     $(table).find('[type="hidden"]').each(function (index) {
-        checked.push($(this).val());
+        checked.push(String($(this).val()));
     });
-    var input = table.parent().siblings('[data-path]');
+
+	var input = table.parent().siblings('[data-path]');
     var path = input.data('path');
     var name = encodeURIComponent(input.val());
     var full_limit = 1000
@@ -280,15 +281,16 @@ function getAllElements(el) {
 
             $.map(json, function (item) {
                 return {
-                    value: item[types[0]],
+                    value: item[types[0]] + 'as',
                     label: item[types[1]],
                 }
             });
 
             var html = '';
             $.each(json, function (index, value) {
+
                 let is_checked;
-                if (checked.includes(value[types[0]])) {
+                if (checked.includes(String(value[types[0]]))) {
                     is_checked = 'checked';
                 }
                 let input_type = 'type="checkbox" name="fd-checkbox[]"';
