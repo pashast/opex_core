@@ -115,7 +115,7 @@
 
 {% macro autocomplete(lang, mod, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(lang, name, entry, required, classes) }}
-    <input type="text" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" data-oc-target="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
+    <input type="text" form="null" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" data-oc-target="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
     <ul id="list-{{ name }}-{{ lang }}" class="dropdown-menu"></ul>
     <div class="form-control p-0 position-relative" style="min-height: 142px;">
         <table data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]" class="table table-sm m-0">
@@ -135,7 +135,7 @@
 
 {% macro autocompleteone(lang, mod, name, value, entry, help, required, classes, type) %}
     {{ _self.begin(lang, name, entry, required, classes) }}
-    <input type="text" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" data-oc-target="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
+    <input type="text" form="null" name="input-{{ name }}-{{ lang }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-{{ lang }}" data-oc-target="list-{{ name }}-{{ lang }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
     <ul id="list-{{ name }}-{{ lang }}" class="dropdown-menu"></ul>
     <div class="form-control p-0 position-relative" style="height: 37px;">
         <table data-id="{{ mod }}_ml[{{ lang }}][{{ name }}]" class="table table-sm m-0">

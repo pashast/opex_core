@@ -157,7 +157,7 @@
 
 {% macro autocomplete(name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
+    <input type="text" form="null" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
     <ul id="list-{{ name }}" class="dropdown-menu"></ul>
     <div class="form-control p-0 position-relative" style="min-height: 142px;">
         <table data-id="{{ name }}" class="table table-sm m-0">
@@ -177,7 +177,7 @@
 
 {% macro autocompleteone(name, value, entry, help, required, classes, type) %}
     {{ _self.begin(name, entry, required, classes) }}
-    <input type="text" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
+    <input type="text" form="null" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
     <ul id="list-{{ name }}" class="dropdown-menu"></ul>
     <div class="form-control p-0 position-relative" style="height: 37px;">
         <table data-id="{{ name }}" class="table table-sm m-0">
