@@ -34,6 +34,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 			'other_opexcore_ac_limit'        => 5,
 			'other_opexcore_ac_full_limit'   => 300,
 			'other_opexcore_check_post_size' => 65534,
+			'other_opexcore_mv_custom_class' => 'mb-4',
 			'other_opexcore_lazy_script'     => 0,
 			'other_opexcore_mobile_detect'   => 0,
 		];

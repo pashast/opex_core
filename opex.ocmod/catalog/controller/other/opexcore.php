@@ -21,7 +21,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 				}
 			}
 
-			if ($this->customer->isLogged() && $setting['module_view_limit_customer_group']) {
+			if ($this->customer->isLogged() && isset($setting['module_view_limit_customer_group']) && $setting['module_view_limit_customer_group']) {
 				if (!in_array((int)$this->customer->getGroupId(), $setting['module_view_limit_customer_group'])) {
 					$unload = true;
 				}
@@ -33,13 +33,13 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 				$route = 'common/home';
 			}
 
-			if ($setting['module_view_limit_product'] && $route == 'product/product' && isset($this->request->get['product_id']) && isset($this->request->get['product_id'])) {
+			if (isset($setting['module_view_limit_product']) && $setting['module_view_limit_product'] && $route == 'product/product' && isset($this->request->get['product_id']) && isset($this->request->get['product_id'])) {
 				if (!in_array((int)$this->request->get['product_id'], $setting['module_view_limit_product'])) {
 					$unload = true;
 				}
 			}
 
-			if ($setting['module_view_limit_category'] && $route == 'product/category' && isset($this->request->get['path'])) {
+			if (isset($setting['module_view_limit_category']) && $setting['module_view_limit_category'] && $route == 'product/category' && isset($this->request->get['path'])) {
 				$path = explode('_', (string)$this->request->get['path']);
 				if ($setting['module_view_limit_category_end']) {
 					$path = array_slice($path, -1);
@@ -50,7 +50,7 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 				}
 			}
 
-			if ($setting['module_view_limit_manufacturer'] && $route == 'product/manufacturer.info' && isset($this->request->get['manufacturer_id'])) {
+			if (isset($setting['module_view_limit_manufacturer']) && $setting['module_view_limit_manufacturer'] && $route == 'product/manufacturer.info' && isset($this->request->get['manufacturer_id'])) {
 				if (!in_array((int)$this->request->get['manufacturer_id'], $setting['module_view_limit_manufacturer'])) {
 					$unload = true;
 				}

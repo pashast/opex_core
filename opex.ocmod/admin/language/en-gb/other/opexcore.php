@@ -12,6 +12,7 @@ $_['entry_status']          = 'Status';
 $_['entry_ac_limit']        = 'Autocomplete limit';
 $_['entry_ac_full_limit']   = 'Autocomplete in popup limit';
 $_['entry_check_post_size'] = 'Max. POST size for modules';
+$_['entry_mv_custom_class'] = 'Additional css-class for the modules';
 $_['entry_lazy_script']     = 'Lazy loading of modules';
 $_['entry_mobile_detect']   = 'MobileDetect';
 $_['help_lazy_script']      = 'Connect script for lazy loading of modules';

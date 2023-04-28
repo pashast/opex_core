@@ -12,6 +12,7 @@ $_['entry_status']          = 'Статус';
 $_['entry_ac_limit']        = 'Ліміт автодоповнення';
 $_['entry_ac_full_limit']   = 'Ліміт автодоповнення у спливаючому вікні';
 $_['entry_check_post_size'] = 'Макс. розмір POST для модулів';
+$_['entry_mv_custom_class'] = 'Додатковий css-класс модулів';
 $_['entry_lazy_script']     = 'Відкладене завантаження модулів';
 $_['entry_mobile_detect']   = 'MobileDetect';
 $_['help_lazy_script']      = 'Підключити скрипт для відкладеного завантаження модулів';
