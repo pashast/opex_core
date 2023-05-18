@@ -60,19 +60,19 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 		if (!$unload) {
 			if (trim($setting['module_view_add_css'])) {
 				foreach (explode(PHP_EOL, trim($setting['module_view_add_css'])) as $item_path) {
-					$this->document->addStyle($item_path);
+					$this->document->addStyle(trim($item_path));
 				}
 			}
 
 			if (trim($setting['module_view_add_js'])) {
 				foreach (explode(PHP_EOL, trim($setting['module_view_add_js'])) as $item_path) {
-					$this->document->addScript($item_path);
+					$this->document->addScript(trim($item_path));
 				}
 			}
 
 			if (trim($setting['module_view_add_js_footer'])) {
 				foreach (explode(PHP_EOL, trim($setting['module_view_add_js_footer'])) as $item_path) {
-					$this->document->addScript($item_path, 'footer');
+					$this->document->addScript(trim($item_path), 'footer');
 				}
 			}
 		}
@@ -85,11 +85,11 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 			return;
 		}
 
-$content = '<script>
-  const lazyOeModules = document.querySelectorAll(\'[data-lazy-oe-module]\');
+$content = "<script>
+  const lazyOeModules = document.querySelectorAll('[data-oe-lazy-link]');
   const lazyOeOptions = {
 	root: null,
-	rootMargin: \'50px\',
+	rootMargin: '50px',
 	threshold: 0.5,
   };
 
@@ -97,12 +97,13 @@ $content = '<script>
 	entries.forEach(entry => {
 	  if (entry.isIntersecting) {
 		let point = entry.target;
-		let url = point.getAttribute(\'data-lazy-oe-module\');
-		let module_id = point.getAttribute(\'data-lazy-oe-module-id\');
+		let url = point.getAttribute('data-oe-lazy-link');
+		let module_id = point.getAttribute('data-oe-lazy-module-id');
+		let module_name = point.getAttribute('data-oe-lazy-module-name');
 		fetch(url)
 		  .then(response => {
 			if (!response.ok) {
-			  throw new Error(\'Server error: \' + response.status);
+			  throw new Error('Network error: ' + response.status);
 			}
 			return response.text();
 		  })
@@ -111,9 +112,7 @@ $content = '<script>
 			Array.from(point.children).forEach(child => point.parentNode.insertBefore(child, point));
 			point.parentNode.removeChild(point);
 			document.dispatchEvent(
-			  new CustomEvent("loadedLazyOeModule", {
-				detail: {module_id: () => module_id},
-			  })
+			  new CustomEvent('loadedLazyOeModule', {'detail': { module_id: module_id, module_name: module_name }})
 			);
 		  })
 		  .catch(error => console.log(error));
@@ -126,7 +125,7 @@ $content = '<script>
 	moduleLazyOeObserver.observe(point);
   });
 </script>
-';
+";
 
 		$output = str_replace(
 			array(

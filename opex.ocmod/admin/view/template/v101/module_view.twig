@@ -7,7 +7,7 @@
         {{ form_rows.buttonYN('module_view_lazy_preloader', module_view_lazy_preloader, entry_module_view_lazy_preloader, '', 0, ['del', 'col-sm-auto col-form-label', 'col']) }}
         <div class="col-10 offset-sm-2 form-text">{{ help_module_view_core }}</div>
       </div>
-      {{ form_rows.input('module_view_custom_class', module_view_custom_class, entry_module_view_custom_class, '', 0, [], '') }}
+      {{ form_rows.input('module_view_custom_class', module_view_custom_class, entry_module_view_custom_class, help_module_view_core, 0, [], '') }}
       {{ form_rows.input('module_view_template', module_view_template, entry_module_view_template, '', 0, [], '') }}
       <div class="row mb-3">
         {{ form_rows.buttonYN('module_view_disable_css', module_view_disable_css, entry_module_view_disable_css, '', 0, ['del', 'col-sm-2 col-form-label', 'col-auto']) }}
