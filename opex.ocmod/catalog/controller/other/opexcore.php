@@ -85,47 +85,9 @@ class Opexcore extends \Opencart\System\Engine\Controller {
 			return;
 		}
 
-$content = "<script>
-  const lazyOeModules = document.querySelectorAll('[data-oe-lazy-link]');
-  const lazyOeOptions = {
-	root: null,
-	rootMargin: '50px',
-	threshold: 0.5,
-  };
+		$data = [];
 
-  const moduleLazyOeObserver = new IntersectionObserver(function (entries, observer) {
-	entries.forEach(entry => {
-	  if (entry.isIntersecting) {
-		let point = entry.target;
-		let url = point.getAttribute('data-oe-lazy-link');
-		let module_id = point.getAttribute('data-oe-lazy-module-id');
-		let module_name = point.getAttribute('data-oe-lazy-module-name');
-		fetch(url)
-		  .then(response => {
-			if (!response.ok) {
-			  throw new Error('Network error: ' + response.status);
-			}
-			return response.text();
-		  })
-		  .then(html => {
-			point.innerHTML = html;
-			Array.from(point.children).forEach(child => point.parentNode.insertBefore(child, point));
-			point.parentNode.removeChild(point);
-			document.dispatchEvent(
-			  new CustomEvent('loadedLazyOeModule', {'detail': { module_id: module_id, module_name: module_name }})
-			);
-		  })
-		  .catch(error => console.log(error));
-		observer.unobserve(point);
-	  }
-	});
-  }, lazyOeOptions);
-
-  lazyOeModules.forEach(point => {
-	moduleLazyOeObserver.observe(point);
-  });
-</script>
-";
+		$content = $this->load->view('extension/opex/common/lazy_script', $data);
 
 		$output = str_replace(
 			array(
