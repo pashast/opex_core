@@ -38,28 +38,29 @@ function cardRemove(block, id) {
             } else if (tab.next('.nav-link').length > 0) {
                 tab.next('.nav-link').tab('show');
             }
+			tab.remove();
         }
-        tab.remove();
     }
 }
 
 function sortPanels() {
-    $('.sort-wrap').sortable({
-        forcePlaceholderSize: true,
-        items: '.card',
+    $('.sort-items').sortable({
+		animation: 150,
+		ghostClass: 'bg-info',
+		draggable: '.card',
         handle: '.sort-btn',
-        start: function (event, ui) {
+		onStart: function (e) {
             var ids_textarea = [];
-            ui.item.find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
+            $(e.item).find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
                 ids_textarea.push($(this).attr("id"))
             });
             ids_textarea.forEach(function (item, i, ids_textarea) {
                 CKEDITOR.instances[item].destroy();
             });
         },
-        stop: function (event, ui) {
+		onEnd: function (e) {
             var ids_textarea = [];
-            ui.item.find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
+            $(e.item).find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
                 ids_textarea.push($(this).attr("id"))
             });
             ids_textarea.forEach(function (item, i, ids_textarea) {
@@ -77,11 +78,12 @@ function navTabs(el) {
 
     var dragstart_i;
     $(el).find('.nav-pills[role="tablist"]').sortable({
-        forcePlaceholderSize: true,
-        items: '.nav-link',
-        start: function (e, ui) {
-            dragstart_i = $(ui.item[0]).index();
-            var id = $(ui.item[0]).data('bs-target');
+		animation: 150,
+		ghostClass: 'border',
+		draggable: '.nav-link',
+		onStart: function (e) {
+            dragstart_i = $(e.item).index();
+            var id = $(e.item).data('bs-target');
             var ids_textarea = [];
             $(id).find("textarea[data-oc-toggle=\'ckeditor\']").each(function () {
                 ids_textarea.push($(this).attr("id"))
@@ -90,9 +92,9 @@ function navTabs(el) {
                 CKEDITOR.instances[item].destroy();
             });
         },
-        stop: function (e, ui) {
-            var i = $(ui.item[0]).index();
-            var id = $(ui.item[0]).data('bs-target');
+		onEnd: function (e) {
+            var i = $(e.item).index();
+            var id = $(e.item).data('bs-target');
             if (dragstart_i > i) {
                 $(id).insertBefore($(id).parent().find('.tab-pane').eq(i));
             } else {
@@ -212,7 +214,8 @@ function removeAcItem(table, val) {
 
 function sortAutocompleteItems() {
     $('.item-well').sortable({
-        forcePlaceholderSize: true,
+		animation: 150,
+		ghostClass: 'bg-info'
     });
 }
 
@@ -231,6 +234,7 @@ function popAutoheadingText(el) {
     var jsid = $(card).data('jsid');
     var mljsid = $(card).data('mljsid');
     var mllang = $(card).data('mllang');
+    var text = '';
 
     var textEl = el.find('input:first');
     if ($(textEl).data('path')) {
@@ -241,14 +245,14 @@ function popAutoheadingText(el) {
 
     if (typeof jsid !== 'undefined') {
         if (typeof opex_js_tabs !== 'undefined' && text === '') {
-            text = opex_js_tabs + ' ' + jsid;
+            text = opex_js_tabs;
         }
         $('#js-card-' + jsid + '-tab').find('.tab-name').text(text);
         $('#js-card-' + jsid).find('.card-name').text(text);
     }
     if (typeof mljsid !== 'undefined' && typeof mllang !== 'undefined') {
         if (typeof opex_mljs_tabs !== 'undefined' && text === '') {
-            text = opex_mljs_tabs + ' ' + mljsid;
+            text = opex_mljs_tabs;
         }
         $('#mljs-card-' + mllang + '-' + mljsid + '-tab').find('.tab-name').text(text);
         $('#mljs-card-' + mllang + '-' + mljsid).find('.card-name').text(text);
@@ -281,7 +285,7 @@ function getAllElements(el) {
 
             $.map(json, function (item) {
                 return {
-                    value: item[types[0]] + 'as',
+                    value: item[types[0]],
                     label: item[types[1]],
                 }
             });
