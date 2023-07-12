@@ -1,17 +1,17 @@
-{% macro begin(name, entry, required, classes) %}
+{% macro begin(mod, name, entry, required, classes) %}
 {% if classes %}
 {% if classes.0 != 'del' %}
 html += '<div class="{{ classes.0 }} {{ required ? 'required' : '' }}">';
 {% endif %}
 {% if classes.1 != 'del' %}
-html += '    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '">{{ entry }}</label>';
+html += '    <label class="{{ classes.1 }}" for="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '">{{ entry }}</label>';
 {% endif %}
 {% if classes.2 != 'del' %}
 html += '    <div class="{{ classes.2 }}">';
 {% endif %}
 {% else %}
 html += '<div class="row mb-3 {{ required ? 'required' : '' }}">';
-html += '    <label class="col-sm-2 col-form-label" for="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '">{{ entry }}</label>';
+html += '    <label class="col-sm-2 col-form-label" for="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '">{{ entry }}</label>';
 html += '    <div class="col-sm-10">';
 {% endif %}
 {% endmacro %}
@@ -35,36 +35,36 @@ html += '</div>';
 {% endmacro %}
 
 {% macro input(mod, name, value, entry, help, required, classes, type) %}
-    {{ _self.begin(name, entry, required, classes) }}
+    {{ _self.begin(mod, name, entry, required, classes) }}
     {% if type == 'color' %}html += '<button type="button" class="opex-remove-color position-absolute end-0 border-0 btn btn-light p-2" style="margin-right: 14px; margin-top: 2px;"><i class="fa-solid px-1 fa-circle-xmark"></i></button>';{% endif %}
-    html += '<input type="{{ type|default('text') }}" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control{% if type == 'color' %} form-control-color w-100{% endif %}"/>';
+    html += '<input type="{{ type|default('text') }}" name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control{% if type == 'color' %} form-control-color w-100{% endif %}"/>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro fonticonpicker(mod, name, value, entry, help, required, classes) %}
-    {{ _self.begin(name, entry, required, classes) }}
+    {{ _self.begin(mod, name, entry, required, classes) }}
     html += '<div class="input-group">';
-    html += '    <input type="text" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control"/>';
+    html += '    <input type="text" name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control"/>';
     html += '    <button class="btn btn-outline-secondary fontello-btn" type="button"><i class="fas fa-icons"></i></button>';
     html += '</div>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro textarea(mod, name, value, entry, help, required, classes, rows_count) %}
-    {{ _self.begin(name, entry, required, classes) }}
-    html += '<textarea name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value }}</textarea>';
+    {{ _self.begin(mod, name, entry, required, classes) }}
+    html += '<textarea name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value }}</textarea>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro editor(mod, name, value, entry, help, required, classes) %}
-    {{ _self.begin(name, entry, required, classes) }}
-    html += '<textarea name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>';
+    {{ _self.begin(mod, name, entry, required, classes) }}
+    html += '<textarea name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" placeholder="{{ entry }}" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro select(mod, name, value, entry, help, required, classes, options) %}
-    {{ _self.begin(name, entry, required, classes) }}
-    html += '<select name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-select">';
+    {{ _self.begin(mod, name, entry, required, classes) }}
+    html += '<select name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-select">';
         {% for key, item in options %}
     html += '        <option value="{{ key }}"{% if key == value %} selected{% endif %}>{{ item }}</option>';
         {% endfor %}
@@ -73,18 +73,18 @@ html += '</div>';
 {% endmacro %}
 
 {% macro buttonYN(mod, name, value, entry, help, required, classes) %}
-    {{ _self.begin(name, entry, required, classes) }}
+    {{ _self.begin(mod, name, entry, required, classes) }}
     html += '<div class="form-check form-switch form-switch-lg">';
-    html += '    <input type="hidden" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="0"/>';
-    html += '    <input type="checkbox" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="1" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-check-input"{% if value %} checked{% endif %}/>';
+    html += '    <input type="hidden" name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" value="0"/>';
+    html += '    <input type="checkbox" name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" value="1" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-check-input"{% if value %} checked{% endif %}/>';
     html += '</div>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro datetimepicker(mod, name, value, entry, help, required, classes, type) %}
-    {{ _self.begin(name, entry, required, classes) }}
+    {{ _self.begin(mod, name, entry, required, classes) }}
     html += '<div class="input-group">';
-    html += '    <input type="text" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control {{ type }}" />';
+    html += '    <input type="text" name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" class="form-control {{ type }}" />';
         {% if type == 'date' %}
     html += '        <span class="input-group-text"><i class="fas fa-calendar"></i></span>';
         {% elseif type == 'time' %}
@@ -97,23 +97,23 @@ html += '</div>';
 {% endmacro %}
 
 {% macro image(mod, name, value, entry, help, required, classes, placeholder) %}
-    {{ _self.begin(name, entry, required, classes) }}
+    {{ _self.begin(mod, name, entry, required, classes) }}
     html += '<div class="card image">';
-    html += '    <img src="{{ placeholder }}" alt="" title="" id="thumb-{{ name }}-' + lang + '-' + id + '" data-oc-placeholder="{{ placeholder }}" class="card-img-top"/> <input type="hidden" name="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" value="{{ value.image }}" id="input-{{ name }}-' + lang + '-' + id + '"/>';
+    html += '    <img src="{{ placeholder }}" alt="" title="" id="thumb-{{ mod }}-{{ name }}-' + lang + '-' + id + '" data-oc-placeholder="{{ placeholder }}" class="card-img-top"/> <input type="hidden" name="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" value="{{ value.image }}" id="input-{{ mod }}-{{ name }}-' + lang + '-' + id + '"/>';
     html += '    <div class="card-body">';
-    html += '        <button type="button" data-oc-toggle="image" data-oc-target="#input-{{ name }}-' + lang + '-' + id + '" data-oc-thumb="#thumb-{{ name }}-' + lang + '-' + id + '" class="btn btn-primary btn-sm btn-block"><i class="fas fa-pencil-alt"></i></button>';
-    html += '        <button type="button" data-oc-toggle="clear" data-oc-target="#input-{{ name }}-' + lang + '-' + id + '" data-oc-thumb="#thumb-{{ name }}-' + lang + '-' + id + '" class="btn btn-warning btn-sm btn-block"><i class="fas fa-trash-alt"></i></button>';
+    html += '        <button type="button" data-oc-toggle="image" data-oc-target="#input-{{ mod }}-{{ name }}-' + lang + '-' + id + '" data-oc-thumb="#thumb-{{ mod }}-{{ name }}-' + lang + '-' + id + '" class="btn btn-primary btn-sm btn-block"><i class="fas fa-pencil-alt"></i></button>';
+    html += '        <button type="button" data-oc-toggle="clear" data-oc-target="#input-{{ mod }}-{{ name }}-' + lang + '-' + id + '" data-oc-thumb="#thumb-{{ mod }}-{{ name }}-' + lang + '-' + id + '" class="btn btn-warning btn-sm btn-block"><i class="fas fa-trash-alt"></i></button>';
     html += '    </div>';
     html += '</div>';
     {{ _self.end(name, help, classes) }}
 {% endmacro %}
 
 {% macro autocomplete(mod, name, value, entry, help, required, classes, type) %}
-    {{ _self.begin(name, entry, required, classes) }}
-    html += '<input type="text" form="null" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-target="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>';
-    html += '<ul id="list-{{ name }}-' + lang + '-' + id + '" class="dropdown-menu"></ul>';
+    {{ _self.begin(mod, name, entry, required, classes) }}
+    html += '<input type="text" form="null" name="input-{{ mod }}-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-target="list-{{ mod }}-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>';
+    html += '<ul id="list-{{ mod }}-{{ name }}-' + lang + '-' + id + '" class="dropdown-menu"></ul>';
     html += '<div class="form-control p-0 position-relative" style="min-height: 142px;">';
-    html += '    <table data-id="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
+    html += '    <table data-id="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
     html += '        <tbody class="item-well lh-1">';
     html += '        </tbody>';
     html += '    </table>';
@@ -123,11 +123,11 @@ html += '</div>';
 {% endmacro %}
 
 {% macro autocompleteone(mod, name, value, entry, help, required, classes, type) %}
-    {{ _self.begin(name, entry, required, classes) }}
-    html += '<input type="text" form="null" name="input-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-target="list-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>';
-    html += '<ul id="list-{{ name }}-' + lang + '-' + id + '" class="dropdown-menu"></ul>';
+    {{ _self.begin(mod, name, entry, required, classes) }}
+    html += '<input type="text" form="null" name="input-{{ mod }}-{{ name }}-' + lang + '-' + id + '" value="" placeholder="{{ entry }}" id="input-{{ mod|replace({'_': '-'}) }}-{{ name|replace({'_': '-'}) }}-' + lang + '-' + id + '" data-oc-target="list-{{ mod }}-{{ name }}-' + lang + '-' + id + '" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>';
+    html += '<ul id="list-{{ mod }}-{{ name }}-' + lang + '-' + id + '" class="dropdown-menu"></ul>';
     html += '<div class="form-control p-0 position-relative" style="height: 37px;">';
-    html += '    <table data-id="{{ mod }}_mljs[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
+    html += '    <table data-id="{{ mod }}[' + lang + '][' + id + '][{{ name }}]" class="table table-sm m-0">';
     html += '        <tbody class="item-well lh-1">';
     html += '        </tbody>';
     html += '    </table>';
