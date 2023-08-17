@@ -1,0 +1,178 @@
+{% macro begin(name, entry, required, classes) %}
+{% if classes %}
+{% if classes.0 != 'del' %}
+<div class="{{ classes.0 }} {{ required ? 'required' : '' }}">
+{% endif %}
+{% if classes.1 != 'del' %}
+    <label class="{{ classes.1 }}" for="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}">{{ entry }}</label>
+{% endif %}
+{% if classes.2 != 'del' %}
+    <div class="{{ classes.2 }}">
+{% endif %}
+{% else %}
+<div class="row mb-3 {{ required ? 'required' : '' }}">
+    <label class="col-sm-2 col-form-label" for="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}">{{ entry }}</label>
+    <div class="col-sm-10">
+{% endif %}
+{% endmacro %}
+
+{% macro end(name, help, classes) %}
+        {% if help %} <div class="form-text">{{ help }}</div> {% endif %}
+        <div id="error-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="invalid-feedback"></div>
+{% if classes %}
+{% if classes.2 != 'del' %}
+    </div>
+{% endif %}
+{% if classes.0 != 'del' %}
+</div>
+{% endif %}
+{% else %}
+    </div>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro mlend(name, language) %}
+    {% if language %}
+        <div id="error-{{ name }}-{{ language.language_id }}" class="invalid-feedback"></div>
+    {% endif %}
+{% endmacro %}
+
+{% macro input(name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    {% if type == 'color' %}
+        {% if value matches '/^#([A-Fa-f0-9]{6})$/' %}
+            <button type="button" class="rex-remove-color position-absolute end-0 border-0 btn btn-light p-2" style="margin-right: 14px; margin-top: 2px;"><i class="fa-solid px-1 fa-circle-xmark"></i></button>
+        {% else %}
+            {% set type = 'text' %}
+            <button type="button" class="rex-add-color position-absolute end-0 border-0 btn btn-light p-2" style="margin-right: 14px; margin-top: 2px;"><i class="fa-solid px-1 fa-eye-dropper"></i></button>
+        {% endif %}
+    {% endif %}
+    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control{% if type == 'color' %} form-control-color w-100{% endif %}"/>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro fonticonpicker(name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <div class="input-group">
+        <input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control"/>
+        <button class="btn btn-outline-secondary fontello-btn" type="button"><i class="fas fa-icons"></i></button>
+    </div>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro textarea(name, value, entry, help, required, classes, rows_count) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <textarea name="{{ name }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control" {% if rows_count %}rows="{{ rows_count }}"{% endif %}>{{ value }}</textarea>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro editor(name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <textarea name="{{ name }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-toggle="ckeditor" class="w-100 position-relative">{{ value }}</textarea>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro input_ml(languages, name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    {% for language in languages %}
+        <div class="input-group">
+            <div class="input-group-text"><img src="{{ language.image }}" title="{{ language.name }}"/></div>
+            <input type="{{ type|default('text') }}" name="{{ name }}[{{ language.language_id }}]" value="{{ value[language.language_id] }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}-{{ language.language_id }}" class="form-control"/>
+        </div>
+        {{ _self.mlend(name, language) }}
+    {% endfor %}
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro select(name, value, entry, help, required, classes, options) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <select name="{{ name }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-select">
+        {% for key, item in options %}
+            <option value="{{ key }}"{% if key == value %} selected{% endif %}>{{ item }}</option>
+        {% endfor %}
+    </select>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro buttonYN(name, value, entry, help, required, classes) %}
+  {{ _self.begin(name, entry, required, classes) }}
+  <div class="form-check form-switch form-switch-lg">
+    <input type="hidden" name="{{ name }}" value="0"/>
+    <input type="checkbox" name="{{ name }}" value="1" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-check-input"{% if value %} checked{% endif %}/>
+  </div>
+  {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro datetimepicker(name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <div class="input-group">
+        <input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" class="form-control {{ type }}" />
+        {% if type == 'date' %}
+            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+        {% elseif type == 'time' %}
+            <span class="input-group-text"><i class="far fa-clock"></i></span>
+        {% elseif type == 'datetime' %}
+            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+        {% endif %}
+    </div>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro image(name, value, entry, help, required, classes, placeholder) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <div class="card image">
+        <img src="{% if value.thumb %}{{ value.thumb }}{% else %}{{ placeholder }}{% endif %}" alt="" title="" id="thumb-{{ name }}" data-oc-placeholder="{{ placeholder }}" class="card-img-top"/> <input type="hidden" name="{{ name }}" value="{{ value.image }}" id="input-{{ name }}"/>
+        <div class="card-body">
+            <button type="button" data-oc-toggle="image" data-oc-target="#input-{{ name }}" data-oc-thumb="#thumb-{{ name }}" class="btn btn-primary btn-sm btn-block"><i class="fas fa-pencil-alt"></i></button>
+            <button type="button" data-oc-toggle="clear" data-oc-target="#input-{{ name }}" data-oc-thumb="#thumb-{{ name }}" class="btn btn-warning btn-sm btn-block"><i class="fas fa-trash-alt"></i></button>
+        </div>
+    </div>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro autocomplete(name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <input type="text" form="null" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off"/>
+    <ul id="list-{{ name }}" class="dropdown-menu"></ul>
+    <div class="form-control p-0 position-relative" style="min-height: 142px;">
+        <table data-id="{{ name }}" class="table table-sm m-0">
+            <tbody class="item-well lh-1">
+                {% for item in value %}
+                    <tr data-id="{{ name }}-{{ item.param_value }}">
+                        <td class="w-100"><i class="fas fa-arrows-alt-v"></i> {{ item.param_label }}<input type="hidden" name="{{ name }}[]" value="{{ item.param_value }}"/></td>
+                        <td class="text-end"><button type="button" class="btn btn-danger btn-sm rex-remove-item"><i class="fas fa-minus-circle"></i></button></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" data-rex-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
+    </div>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro autocompleteone(name, value, entry, help, required, classes, type) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <input type="text" form="null" name="input-{{ name }}" value="" placeholder="{{ entry }}" id="input-{{ name|replace({'_': '-','[': '-',']': ''}) }}" data-oc-target="list-{{ name }}" data-path="{{ type }}" class="form-control item-autocomplete" autocomplete="off" data-one="1"/>
+    <ul id="list-{{ name }}" class="dropdown-menu"></ul>
+    <div class="form-control p-0 position-relative" style="height: 37px;">
+        <table data-id="{{ name }}" class="table table-sm m-0">
+            <tbody class="item-well lh-1">
+                {% if value %}
+                    <tr data-id="{{ name }}-{{ value.param_value }}">
+                        <td>{{ value.param_label }}<input type="hidden" name="{{ name }}" value="{{ value.param_value }}"/></td>
+                        <td class="text-end"><button type="button" class="btn btn-danger btn-sm rex-remove-item"><i class="fas fa-minus-circle"></i></button></td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        <button type="button" data-rex-all-el class="btn border-0 py-0 btn-light position-absolute end-0" style="top: -35px; height: 32px;"><i class="fas fa-th"></i></button>
+    </div>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}
+
+{% macro val_only(name, value, entry, help, required, classes) %}
+    {{ _self.begin(name, entry, required, classes) }}
+    <div class="form-control">{{ value }}</div>
+    {{ _self.end(name, help, classes) }}
+{% endmacro %}

@@ -1,0 +1,91 @@
+{% import 'extension/rex/admin/view/template/v101/inc/form_rows.twig' as form_rows %}
+<div id="module-view-parent">
+  <div id="module-view-view" class="collapse" data-bs-parent="#module-view-parent">
+    <div class="p-3 mb-3 border">
+      <div class="row mb-3">
+        {{ form_rows.buttonYN('module_view_lazy_load', module_view_lazy_load, entry_module_view_lazy_load, '', 0, ['del', 'col-sm-2 col-form-label', 'col-auto']) }}
+        {{ form_rows.buttonYN('module_view_lazy_preloader', module_view_lazy_preloader, entry_module_view_lazy_preloader, '', 0, ['del', 'col-sm-auto col-form-label', 'col']) }}
+        <div class="col-10 offset-sm-2 form-text">{{ help_module_view_core }}</div>
+      </div>
+      {{ form_rows.input('module_view_custom_class', module_view_custom_class, entry_module_view_custom_class, help_module_view_core, 0, [], '') }}
+      {{ form_rows.input('module_view_template', module_view_template, entry_module_view_template, '', 0, [], '') }}
+      <div class="row mb-3">
+        {{ form_rows.buttonYN('module_view_disable_css', module_view_disable_css, entry_module_view_disable_css, '', 0, ['del', 'col-sm-2 col-form-label', 'col-auto']) }}
+        {{ form_rows.buttonYN('module_view_disable_js', module_view_disable_js, entry_module_view_disable_js, '', 0, ['del', 'col-sm-auto col-form-label', 'col']) }}
+        <div class="col-10 offset-sm-2 form-text">{{ help_module_disable_exist }}</div>
+      </div>
+      {{ form_rows.textarea('module_view_add_css', module_view_add_css, entry_module_view_add_css, help_newline, 0, [], '') }}
+      {{ form_rows.textarea('module_view_add_js', module_view_add_js, entry_module_view_add_js, help_newline, 0, [], '') }}
+      {{ form_rows.textarea('module_view_add_js_footer', module_view_add_js_footer, entry_module_view_add_js_footer, help_newline, 0, [], '') }}
+    </div>
+  </div>
+  <div id="module-view-filter" class="collapse" data-bs-parent="#module-view-parent">
+    <div class="p-3 mb-3 border">
+      {{ form_rows.buttonYN('module_view_enable_filters', module_view_enable_filters, entry_module_view_enable_filters, '', 0, []) }}
+      {{ form_rows.select('module_view_mobile', module_view_mobile, entry_module_view_mobile, help_module_view_core, 0, [], sort_module_view_mobile) }}
+      {{ form_rows.select('module_view_logged', module_view_logged, entry_module_view_logged, '', 0, [], sort_module_view_logged) }}
+      {{ form_rows.autocomplete('module_view_limit_customer_group', module_view_limit_customer_group, entry_module_view_limit_customer_group, '', 0, [], 'extension/rex/other/rexcore.autocompleteCustomerGroup') }}
+      {{ form_rows.autocomplete('module_view_limit_product', module_view_limit_product, entry_module_view_limit_product, help_autocomplete, 0, [], 'catalog/product.autocomplete') }}
+      {{ form_rows.autocomplete('module_view_limit_category', module_view_limit_category, entry_module_view_limit_category, help_autocomplete, 0, [], 'extension/rex/other/rexcore.autocompleteCategory') }}
+      {{ form_rows.buttonYN('module_view_limit_category_end', module_view_limit_category_end, entry_module_view_limit_category_end, '', 0, []) }}
+      {{ form_rows.autocomplete('module_view_limit_manufacturer', module_view_limit_manufacturer, entry_module_view_limit_manufacturer, help_autocomplete, 0, [], 'extension/rex/other/rexcore.autocompleteManufacturer') }}
+    </div>
+  </div>
+  <div id="module-view-backup" class="collapse" data-bs-parent="#module-view-parent">
+    <div class="p-3 mb-3 border text-center">
+      <button type="button" id="button-upload" class="btn btn-warning"><i class="fa-fw fa-solid fa-upload"></i> {{ entry_module_view_backup_upload }}</button>
+      {% if module_id %}
+        <a href="{{ settings_export }}" target="_blank" class="btn btn-info"><i class="fa-fw fa-solid fa-download"></i> {{ entry_module_view_backup_download }}</a>
+        <a href="{{ duplicate }}" type="button" class="btn btn-light"><i class="fa-fw fa-solid fa-copy"></i> {{ entry_module_view_copy }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<script>
+  // Upload
+  $('#button-upload').on('click', function () {
+    $('#form-upload').remove();
+    $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="upload" /></form>');
+    $('#form-upload input[name=\'upload\']').trigger('click');
+
+    if (typeof timer != 'undefined') {
+      clearInterval(timer);
+    }
+
+    timer = setInterval(function () {
+      if ($('#form-upload input[name=\'upload\']').val() !== '') {
+        clearInterval(timer);
+
+        $.ajax({
+          url: '{{ settings_import }}',
+          type: 'post',
+          dataType: 'json',
+          data: new FormData($('#form-upload')[0]),
+          cache: false,
+          contentType: false,
+          processData: false,
+          beforeSend: function () {
+            $('#button-upload').button('loading');
+          },
+          complete: function () {
+            $('#button-upload').button('reset');
+          },
+          success: function (json) {
+            $('.alert-dismissible').remove();
+
+            if (json['error']) {
+              $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+            }
+
+            if (json['redirect']) {
+              location = json['redirect'];
+            }
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+          }
+        });
+      }
+    }, 500);
+  });
+</script>

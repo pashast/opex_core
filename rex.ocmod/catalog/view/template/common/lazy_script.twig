@@ -1,0 +1,40 @@
+<script>
+  const lazyRexModules = document.querySelectorAll('[data-rex-lazy-link]');
+  const lazyRexOptions = {
+    root: null,
+    rootMargin: '50px',
+    threshold: 0.5,
+  };
+
+  const moduleLazyRexObserver = new IntersectionObserver(function (entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        let point = entry.target;
+        let url = point.getAttribute('data-rex-lazy-link');
+        let module_id = point.getAttribute('data-rex-lazy-module-id');
+        let module_name = point.getAttribute('data-rex-lazy-module-name');
+        fetch(url)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network error: ' + response.status);
+            }
+            return response.text();
+          })
+          .then(html => {
+            point.innerHTML = html;
+            Array.from(point.children).forEach(child => point.parentNode.insertBefore(child, point));
+            point.parentNode.removeChild(point);
+            document.dispatchEvent(
+              new CustomEvent('rexLazyLoadedModule', {'detail': { module_id: module_id, module_name: module_name }})
+            );
+          })
+          .catch(error => console.log(error));
+        observer.unobserve(point);
+      }
+    });
+  }, lazyRexOptions);
+
+  lazyRexModules.forEach(point => {
+    moduleLazyRexObserver.observe(point);
+  });
+</script>
